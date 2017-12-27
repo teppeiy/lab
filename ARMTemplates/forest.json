@@ -102,15 +102,24 @@
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
         "wapDscExtensionFunction": "WAP",
+
+        "nsgName": "[concat(parameters('subnetName'),'-NSG')]",
+        "dmzNsgName": "[concat(parameters('dmzSubnetName'),'-NSG')]",
         "subnets": [{
             "name": "[parameters('subnetName')]",
             "properties": {
-                "addressPrefix": "[parameters('subnetPrefix')]"
+                "addressPrefix": "[parameters('subnetPrefix')]",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
+                }
             }
         }, {
             "name": "[parameters('dmzSubnetName')]",
             "properties": {
-                "addressPrefix": "[parameters('dmzSubnetPrefix')]"
+                "addressPrefix": "[parameters('dmzSubnetPrefix')]",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('dmzNsgName'))]"
+                }
             }
         }]
     },
@@ -138,14 +147,14 @@
                     "uri": "[variables('nsgTemplateURI')]"
                 },
                 "parameters": {
-                    "subnetName": {
-                        "value": "[parameters('subnetName')]"
+                    "nsgName": {
+                        "value": "[variables('nsgName')]"
                     },
                     "subnetPrefix": {
                         "value": "[parameters('subnetPrefix')]"
                     },
-                    "dmzSubnetName": {
-                        "value": "[parameters('dmzSubnetName')]"
+                    "dmzNsgName": {
+                        "value": "[variables('dmzNsgName')]"
                     },
                     "dmzSubnetPrefix": {
                         "value": "[parameters('dmzSubnetPrefix')]"
