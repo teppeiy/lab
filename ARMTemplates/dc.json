@@ -66,9 +66,11 @@
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
         "dscExtensionScript": "LabDSC.ps1",
         "dscExtensionFunction": "Forest",
-        "dnsServerIpAddresses": "[parameters('dcIpAddress')]"
+        "dnsServerIpAddresses": "[parameters('dcIpAddress')]",
+        "adfsTemplateUri": "[variables('dcTemplateUri')]"
     },
-    "resources": [{
+    "resources": [
+        {
             "name": "DC",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
@@ -201,6 +203,61 @@
                             }]
                         }
                     }]
+                }
+            }
+        },
+        {
+            "name": "ADFS",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('adfsTemplateUri')]"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "virtualMachineName": {
+                        "value": "[parameters('virtualMachineName')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "diagnosticsStorageAccountName": {
+                        "value": "[parameters('diagnosticsStorageAccountName')]"
+                    },
+                    "diagnosticsStorageAccountId": {
+                        "value": "[parameters('diagnosticsStorageAccountId')]"
+                    },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    },
+                    "publicIpAddressType": {
+                        "value": "[parameters('publicIpAddressType')]"
+                    },
+                    "publicIpAddressSku": {
+                        "value": "[parameters('publicIpAddressSku')]"
+                    },
+                    "imageSku": {
+                        "value": "[parameters('imageSku')]"
+                    }
                 }
             }
         }
