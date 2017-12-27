@@ -158,7 +158,7 @@
                     "configuration": {
                         "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
                         "script": "[variables('dscExtensionScript')]",
-                        "function": "[variables('dscExtensionFunction')]"
+                        "function": "[variables('dcDscExtensionFunction')]"
                     },
                     "configurationArguments": {}
                 },
