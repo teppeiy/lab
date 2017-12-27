@@ -1,4 +1,4 @@
-configuration Forest {
+configuration DC {
     param
     (
         [Parameter(Mandatory)] 
@@ -142,7 +142,7 @@ configuration Forest {
     }
 }
 
-configuration ADFS {
+configuration FS {
     param
     (
         [Parameter(Mandatory)] 
