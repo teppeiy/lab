@@ -121,7 +121,7 @@
             }
         },
         {
-            "name": "Microsoft.Powershell.DSC",
+            "name": "[concat(parameters('virtualMachineName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
@@ -136,7 +136,7 @@
                 "forceUpdateTag": "1.02",
                 "settings": {
                     "configuration": {
-                        "url": "[concat(parameters('_artifactsLocation'), '/', variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+                        "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
                         "script": "[variables('dscExtensionScript')]",
                         "function": "[variables('dscExtensionFunction')]"
                     },
