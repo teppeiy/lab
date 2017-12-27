@@ -11,6 +11,13 @@
         "dcIpAddress": {
             "type": "string"
         },
+        "newDeployment": {
+            "type": "string",
+            "allowedValues": [
+                "true", "false"
+            ],
+            "defaultValue": "true"
+        },
         "location": {
             "type": "string"
         },
@@ -80,6 +87,9 @@
                     "uri": "[variables('dcTemplateUri')]"
                 },
                 "parameters": {
+                    "newDeployment": {
+                        "value": "[parameters('newDeployment')]"
+                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
@@ -203,61 +213,6 @@
                             }]
                         }
                     }]
-                }
-            }
-        },
-        {
-            "name": "ADFS",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('adfsTemplateUri')]"
-                },
-                "parameters": {
-                    "location": {
-                        "value": "[parameters('location')]"
-                    },
-                    "virtualMachineName": {
-                        "value": "[parameters('virtualMachineName')]"
-                    },
-                    "virtualMachineSize": {
-                        "value": "[parameters('virtualMachineSize')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "virtualNetworkName": {
-                        "value": "[parameters('virtualNetworkName')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "diagnosticsStorageAccountName": {
-                        "value": "[parameters('diagnosticsStorageAccountName')]"
-                    },
-                    "diagnosticsStorageAccountId": {
-                        "value": "[parameters('diagnosticsStorageAccountId')]"
-                    },
-                    "addressPrefix": {
-                        "value": "[parameters('addressPrefix')]"
-                    },
-                    "subnetName": {
-                        "value": "[parameters('subnetName')]"
-                    },
-                    "subnetPrefix": {
-                        "value": "[parameters('subnetPrefix')]"
-                    },
-                    "publicIpAddressType": {
-                        "value": "[parameters('publicIpAddressType')]"
-                    },
-                    "publicIpAddressSku": {
-                        "value": "[parameters('publicIpAddressSku')]"
-                    },
-                    "imageSku": {
-                        "value": "[parameters('imageSku')]"
-                    }
                 }
             }
         }
