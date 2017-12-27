@@ -11,13 +11,6 @@
         "dcIpAddress": {
             "type": "string"
         },
-        "newDeployment": {
-            "type": "string",
-            "allowedValues": [
-                "true", "false"
-            ],
-            "defaultValue": "true"
-        },
         "domainName": {
             "type": "string"
         },
@@ -222,6 +215,12 @@
                     },
                     "imageSku": {
                         "value": "[variables('dcImageSku')]"
+                    },
+                    "privateIPAllocationMethod":{
+                        "value": "Static"
+                    },
+                    "privateIPAddress":{
+                        "value": "[parameters('dcIpAddress')]"
                     },
                     "enableDiagnostics": {
                         "value": "[parameters('enableDiagnostics')]"

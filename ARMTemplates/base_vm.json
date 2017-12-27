@@ -57,6 +57,14 @@
             ],
             "defaultValue": "2012-R2-Datacenter"
         },
+        "privateIPAllocationMethod":{
+            "type": "string",
+            "allowedValues": ["Dynamic", "Static"],
+            "defaultValue": "Dynamic"
+        },
+        "privateIPAddress":{
+            "type": "string"
+        },
         "enableDiagnostics":{
             "type": "string",
             "defaultValue": "true"
@@ -383,6 +391,36 @@
             }
         },
         {
+            "condition": "[equals(parameters('privateIPAllocationMethod'), 'Static')]",
+            "name": "[variables('networkInterfaceName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2016-09-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+                "[concat('Microsoft.Network/publicIpAddresses/', variables('publicIpAddressName'))]",
+                "[concat('Microsoft.Network/networkSecurityGroups/', variables('networkSecurityGroupName'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [{
+                    "name": "ipconfig1",
+                    "properties": {
+                        "subnet": {
+                            "id": "[variables('subnetRef')]"
+                        },
+                        "privateIPAllocationMethod": "Static",
+                        "privateIPAddress": "[parameters('privateIPAddress')]",
+                        "publicIpAddress": {
+                            "id": "[resourceId(resourceGroup().name,'Microsoft.Network/publicIpAddresses', variables('publicIpAddressName'))]"
+                        }
+                    }
+                }],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
+                }
+            }
+        },
+        {
             "name": "[variables('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2016-09-01",
@@ -411,6 +449,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('privateIPAllocationMethod'), 'Static')]",
             "name": "[variables('publicIpAddressName')]",
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2017-08-01",
