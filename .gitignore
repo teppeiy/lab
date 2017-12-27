@@ -1,1 +1,4 @@
 PowerShell/
+ARMTemplateParameters/
+DSC/*.ps1
+DSC/*.psd1

@@ -48,7 +48,7 @@
         "publicIpAddressSku": {
             "type": "string"
         },
-        "imageSku":{
+        "imageSku": {
             "type": "string",
             "allowedValues": [
                 "2016-Datacenter",
@@ -59,10 +59,9 @@
         }
     },
     "variables": {
-        "dcTemplateUri": "[concat(parameters('assetLocation'), 'single_vm_template.json')]"
+        "dcTemplateUri": "[concat(parameters('assetLocation'), 'base_vm.json')]"
     },
-    "resources": [
-        {
+    "resources": [{
             "name": "DC",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
@@ -111,14 +110,43 @@
                     "publicIpAddressSku": {
                         "value": "[parameters('publicIpAddressSku')]"
                     },
-                    "imageSku":{
+                    "imageSku": {
                         "value": "[parameters('imageSku')]"
                     }
+                }
+            }
+        },
+        {
+            "name": "Microsoft.Powershell.DSC",
+            "type": "extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/DC"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.20",
+                "autoUpgradeMinorVersion": true,
+                "forceUpdateTag": "[parameters('dscExtensionUpdateTagVersion')]",
+                "settings": {
+                    "configuration": {
+                        "url": "[concat(parameters('_artifactsLocation'), '/', variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+                        "script": "dscExtension.ps1",
+                        "function": "Main"
+                    },
+                    "configurationArguments": {
+                        "nodeName": "[variables('vmName')]"
+                    }
+                },
+                "protectedSettings": {
+                    "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
                 }
             }
         }
     ],
     "outputs": {
-        
+
     }
 }
