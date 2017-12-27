@@ -221,9 +221,12 @@
             }
         },
         {
-            "name": "DC",
+            "name": "FS",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "virtualNetworkDNSUpdate"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
