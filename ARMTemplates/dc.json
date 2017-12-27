@@ -122,7 +122,7 @@
         },
         {
             "name": "Microsoft.Powershell.DSC",
-            "type": "extensions",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
