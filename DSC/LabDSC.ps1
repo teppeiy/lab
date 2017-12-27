@@ -159,7 +159,7 @@ configuration FS {
         }
         xComputer JoinDomain
         {
-            Name          = $MachineName 
+            Name          = $env:COMPUTERNAME 
             DomainName    = $ConfigurationData.NonNodeData.DomainName 
             Credential    = $domainCred  # Credential to join to domain
         }

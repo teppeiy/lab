@@ -73,6 +73,7 @@
         "dscExtensionScript": "LabDSC.ps1",
         "dcDscExtensionFunction": "DC",
         "fsDscExtensionFunction": "FS",
+        "wapDscExtensionFunction": "WAP",
         "dnsServerIpAddresses": "[parameters('dcIpAddress')]",
         "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/base_vm.json')]",
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
