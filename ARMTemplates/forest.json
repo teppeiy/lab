@@ -65,6 +65,10 @@
                 "2008-R2-SP1"
             ],
             "defaultValue": "2012-R2-Datacenter"
+        },
+        "enableDiagnostics":{
+            "type": "string",
+            "defaultValue": "true"
         }
     },
     "variables": {
@@ -137,6 +141,9 @@
                     },
                     "imageSku": {
                         "value": "[variables('dcImageSku')]"
+                    },
+                    "enableDiagnostics": {
+                        "value": "[parameters('enableDiagnostics')]"
                     }
                 }
             }
@@ -279,6 +286,9 @@
                     },
                     "imageSku": {
                         "value": "[variables('fsImageSku')]"
+                    },
+                    "enableDiagnostics": {
+                        "value": "[parameters('enableDiagnostics')]"
                     }
                 }
             }

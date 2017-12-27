@@ -56,6 +56,10 @@
                 "2008-R2-SP1"
             ],
             "defaultValue": "2012-R2-Datacenter"
+        },
+        "enableDiagnostics":{
+            "type": "string",
+            "defaultValue": "true"
         }
     },
     "variables": {
@@ -116,6 +120,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('enableDiagnostics'), 'true')]",
             "name": "[concat(parameters('virtualMachineName'),'/', variables('diagnosticsExtensionName'))]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2017-03-30",
