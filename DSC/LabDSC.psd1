@@ -1,23 +1,19 @@
 ﻿@{ 
     AllNodes    = @( 
         @{ 
-            Nodename                    = "localhost" 
-            Role                        = "DC" 
-            #DomainName = "teppeiy.local"
-            RetryCount                  = 20  
-            RetryIntervalSec            = 30  
-            PsDscAllowPlainTextPassword = $true
+            Nodename = "localhost" 
+            Role     = "DC"
+            #PsDscAllowPlainTextPassword = $true
         }, 
         @{ 
-            Nodename         = "adfs" 
-            Role             = "ADFS" 
-            #DomainName = "teppeiy.local" 
-            RetryCount       = 20  
-            RetryIntervalSec = 30  
+            Nodename = "adfs" 
+            Role     = "FS" 
             #PsDscAllowPlainTextPassword = $true
         } 
     )
     NonNodeData = @{
+        RetryCount          = 20  
+        RetryIntervalSec    = 30
         PowerShellModules   = 'MSOnline', 'AzureAD', 'AzureADPreview'
         AdGroups            = 'HR', 'Sales', 'IT', 'VIP'
         OrganizationalUnits = 'FTE', 'Clients'

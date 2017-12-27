@@ -153,7 +153,7 @@ configuration FS {
         [pscredential]$domainCred
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-    Import-DscResource -Module PSDesiredStateConfiguration, xActiveDirectory, xComputerManagement
+    Import-DscResource -Module PSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
 
     Node 'localhost'
     {
@@ -161,16 +161,30 @@ configuration FS {
             DebugMode          = 'All'
             RebootNodeIfNeeded = $true
         }
+        xWaitForADDomain DscForestWait 
+        { 
+            DomainName = $DomainName 
+            DomainUserCredential= $domainCreds
+            RetryCount = $ConfigData.NonNodeData.RetryIntervalSec
+            RetryIntervalSec = $ConfigData.NonNodeData.RetryIntervalSec
+        }
         xComputer JoinDomain
         {
             Name          = $env:COMPUTERNAME 
             DomainName    = $domainName 
             Credential    = $domainCred  # Credential to join to domain
+            DependsOn = "[xWaitForADDomain]DscForestWait"
         }
+        xPendingReboot Reboot1
+{ 
+   Name = "RebootServer"
+   DependsOn = "[xComputer]JoinDomain"
+}
         WindowsFeature installADFS  #install ADFS
         {
             Ensure = "Present"
             Name   = "ADFS-Federation"
+            DependsOn = "[xPendingReboot]Reboot1"
         }
         <#
         WindowsFeature RSAT-AD-AdminCenter {
@@ -210,9 +224,6 @@ configuration FS {
                 $dt = "C:\Users\Public\Desktop\"
                 $links = @(
                     @{site = "%windir%\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe"; name = "PowerShell ISE"; icon = "%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell_ise.exe, 0"},
-                    @{site = "%SystemRoot%\system32\dsa.msc"; name = "AD Users and Computers"; icon = "%SystemRoot%\system32\dsadmin.dll, 0"},
-                    @{site = "%SystemRoot%\system32\domain.msc"; name = "AD Domains and Trusts"; icon = "%SystemRoot%\system32\domadmin.dll, 0"},
-                    @{site = "%SystemRoot%\system32\dnsmgmt.msc"; name = "DNS"; icon = "%SystemRoot%\system32\dnsmgr.dll, 0"},
                     @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"}
                 )
 
