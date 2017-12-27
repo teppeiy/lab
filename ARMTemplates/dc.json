@@ -61,7 +61,9 @@
     "variables": {
         "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'base_vm.json')]",
         "dscExtensionArchiveFolder": "DSC",
-        "dscExtensionArchiveFileName": "LabDSC.ps1.zip"
+        "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
+        "dscExtensionScript": "LabDSC.ps1",
+        "dscExtensionFunction": "Forest"
     },
     "resources": [{
             "name": "DC",
@@ -135,8 +137,8 @@
                 "settings": {
                     "configuration": {
                         "url": "[concat(parameters('_artifactsLocation'), '/', variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
-                        "script": "dscExtension.ps1",
-                        "function": "Main"
+                        "script": "[variables('dscExtensionScript')]",
+                        "function": "[variables('dscExtensionFunction')]"
                     },
                     "configurationArguments": {
 
