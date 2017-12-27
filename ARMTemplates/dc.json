@@ -2,7 +2,7 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "assetLocation": {
+        "_artifactsLocation": {
             "type": "string",
             "defaultValue": "https://raw.githubusercontent.com/teppeiy/lab/master/ARMTemplates/",
             "metadata": {
@@ -59,7 +59,9 @@
         }
     },
     "variables": {
-        "dcTemplateUri": "[concat(parameters('assetLocation'), 'base_vm.json')]"
+        "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'base_vm.json')]",
+        "dscExtensionArchiveFolder": "DSC",
+        "dscExtensionArchiveFileName": "LabDSC.ps1.zip"
     },
     "resources": [{
             "name": "DC",
@@ -127,9 +129,9 @@
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
-                "typeHandlerVersion": "2.20",
+                "typeHandlerVersion": "2.21",
                 "autoUpgradeMinorVersion": true,
-                "forceUpdateTag": "[parameters('dscExtensionUpdateTagVersion')]",
+                "forceUpdateTag": "1.02",
                 "settings": {
                     "configuration": {
                         "url": "[concat(parameters('_artifactsLocation'), '/', variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
@@ -137,11 +139,24 @@
                         "function": "Main"
                     },
                     "configurationArguments": {
-                        "nodeName": "[variables('vmName')]"
+
                     }
                 },
                 "protectedSettings": {
-                    "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                    "configurationArguments": {
+                        "safemodeAdministratorCred": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "[parameters('adminPassword')]"
+                        },
+                        "domainCred": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "[parameters('adminPassword')]"
+                        },
+                        "NewADUserCred": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "[parameters('adminPassword')]"
+                        }
+                    }
                 }
             }
         }

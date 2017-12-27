@@ -5,9 +5,9 @@ configuration Forest {
         [pscredential]$safemodeAdministratorCred, 
         [Parameter(Mandatory)] 
         [pscredential]$domainCred, 
-        [Parameter(Mandatory)] 
+        [Parameter] 
         [pscredential]$DNSDelegationCred, 
-        [Parameter(Mandatory)] 
+        [Parameter(Mandatory)]
         [pscredential]$NewADUserCred 
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
