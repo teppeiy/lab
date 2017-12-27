@@ -4,10 +4,12 @@
     "parameters": {
         "_artifactsLocation": {
             "type": "string",
-            "defaultValue": "https://raw.githubusercontent.com/teppeiy/lab/master/",
             "metadata": {
                 "description": "This is the location in which all the linked templates are stored."
             }
+        },
+        "dcIpAddress": {
+            "type": "string"
         },
         "location": {
             "type": "string"
@@ -63,7 +65,8 @@
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
         "dscExtensionScript": "LabDSC.ps1",
-        "dscExtensionFunction": "Forest"
+        "dscExtensionFunction": "Forest",
+        "dnsServerIpAddresses": "[parameters('dcIpAddress')]"
     },
     "resources": [{
             "name": "DC",
@@ -140,9 +143,7 @@
                         "script": "[variables('dscExtensionScript')]",
                         "function": "[variables('dscExtensionFunction')]"
                     },
-                    "configurationArguments": {
-
-                    }
+                    "configurationArguments": {}
                 },
                 "protectedSettings": {
                     "configurationArguments": {
@@ -159,6 +160,47 @@
                             "Password": "[parameters('adminPassword')]"
                         }
                     }
+                }
+            }
+        },
+        {
+            "name": "virtualNetworkDNSUpdate",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/DC",
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'),'/extensions/Microsoft.Powershell.DSC')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "parameters": {},
+                "template": {
+                    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [{
+                        "name": "[parameters('virtualNetworkName')]",
+                        "type": "Microsoft.Network/virtualNetworks",
+                        "location": "[resourcegroup().location]",
+                        "apiVersion": "2017-08-01",
+                        "properties": {
+                            "dhcpOptions": {
+                                "dnsServers": ["[variables('dnsServerIpAddresses')]"]
+                            },
+                            "addressSpace": {
+                                "addressPrefixes": [
+                                    "[parameters('addressPrefix')]"
+                                ]
+                            },
+                            "subnets": [{
+                                "name": "[parameters('subnetName')]",
+                                "properties": {
+                                    "addressPrefix": "[parameters('subnetPrefix')]"
+                                }
+                            }]
+                        }
+                    }]
                 }
             }
         }
