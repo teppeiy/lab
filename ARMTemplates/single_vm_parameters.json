@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "southeastasia"
+        },
+        "virtualMachineName": {
+            "value": "tyvm"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2s_v3"
+        },
+        "adminUsername": {
+            "value": "teppeiy"
+        },
+        "virtualNetworkName": {
+            "value": "default"
+        },
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.KeyVault/vaults/tyKeyVault"
+                },
+                "secretName": "LabAdmin"
+            }
+        },
+        "diagnosticsStorageAccountName": {
+            "value": "teppeiy"
+        },
+        "diagnosticsStorageAccountId": {
+            "value": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/utilities/providers/Microsoft.Storage/storageAccounts/teppeiy"
+        },
+        "addressPrefix": {
+            "value": "10.3.0.0/24"
+        },
+        "subnetName": {
+            "value": "default"
+        },
+        "subnetPrefix": {
+            "value": "10.3.0.0/24"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        }
+    }
+}

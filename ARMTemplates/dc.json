@@ -1,0 +1,117 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+        "virtualMachineName": {
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "diagnosticsStorageAccountName": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountId": {
+            "type": "string"
+        },
+        "addressPrefix": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "subnetPrefix": {
+            "type": "string"
+        },
+        "publicIpAddressType": {
+            "type": "string"
+        },
+        "publicIpAddressSku": {
+            "type": "string"
+        },
+        "imageSku":{
+            "type": "string",
+            "allowedValues": [
+                "2016-Datacenter",
+                "2012-R2-Datacenter",
+                "2008-R2-SP1"
+            ],
+            "defaultValue": "2012-R2-Datacenter"
+        }
+    },
+    "variables": {
+        "dcTemplateUri": "single_vm_template.json"
+    },
+    "resources": [
+        {
+            "name": "DC",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('dcTemplateUri')]"
+                },
+                "parameters": {
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "virtualMachineName": {
+                        "value": "[parameters('virtualMachineName')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "diagnosticsStorageAccountName": {
+                        "value": "[parameters('diagnosticsStorageAccountName')]"
+                    },
+                    "diagnosticsStorageAccountId": {
+                        "value": "[parameters('diagnosticsStorageAccountId')]"
+                    },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    },
+                    "publicIpAddressType": {
+                        "value": "[parameters('publicIpAddressType')]"
+                    },
+                    "publicIpAddressSku": {
+                        "value": "[parameters('publicIpAddressSku')]"
+                    },
+                    "imageSku":{
+                        "value": "[parameters('imageSku')]"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        
+    }
+}
