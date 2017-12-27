@@ -19,7 +19,6 @@
     )
     NonNodeData = @{
         PowerShellModules   = 'MSOnline', 'AzureAD', 'AzureADPreview'
-        DomainName          = 'teppeiy.local'
         AdGroups            = 'HR', 'Sales', 'IT', 'VIP'
         OrganizationalUnits = 'FTE', 'Clients'
  

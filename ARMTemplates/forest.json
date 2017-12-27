@@ -18,6 +18,9 @@
             ],
             "defaultValue": "true"
         },
+        "domainName": {
+            "type": "string"
+        },
         "location": {
             "type": "string"
         },
@@ -72,19 +75,26 @@
         }
     },
     "variables": {
+        "domainAdminUsername": "[concat(parameters('domainName'),'\\',parameters('adminUsername'))]",
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
         "dscExtensionScript": "LabDSC.ps1",
-        "dcDscExtensionFunction": "DC",
-        "fsDscExtensionFunction": "FS",
-        "wapDscExtensionFunction": "WAP",
         "dnsServerIpAddresses": "[parameters('dcIpAddress')]",
+
         "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/base_vm.json')]",
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
+        "dcDscExtensionFunction": "DC",
+        
         "fsTemplateUri": "[variables('dcTemplateUri')]",
         "fsVmName": "[concat(parameters('virtualMachineName'), '-FS')]",
-        "fsImageSku": "[parameters('imageSku')]"
+        "fsImageSku": "[parameters('imageSku')]",
+        "fsDscExtensionFunction": "FS",
+        
+        "wapTemplateUri": "[variables('dcTemplateUri')]",
+        "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
+        "wapImageSku": "[parameters('imageSku')]",
+        "wapDscExtensionFunction": "WAP"
     },
     "resources": [
         {
@@ -168,7 +178,9 @@
                         "script": "[variables('dscExtensionScript')]",
                         "function": "[variables('dcDscExtensionFunction')]"
                     },
-                    "configurationArguments": {}
+                    "configurationArguments": {
+                        "domainName": "[parameters('domainName')]"
+                    }
                 },
                 "protectedSettings": {
                     "configurationArguments": {
@@ -177,7 +189,7 @@
                             "Password": "[parameters('adminPassword')]"
                         },
                         "domainCred": {
-                            "UserName": "[parameters('adminUsername')]",
+                            "UserName": "[variables('domainAdminUsername')]",
                             "Password": "[parameters('adminPassword')]"
                         },
                         "NewADUserCred": {
@@ -313,20 +325,113 @@
                         "script": "[variables('dscExtensionScript')]",
                         "function": "[variables('fsDscExtensionFunction')]"
                     },
-                    "configurationArguments": {}
+                    "configurationArguments": {
+                        "domainName": "[parameters('domainName')]"
+                    }
                 },
                 "protectedSettings": {
                     "configurationArguments": {
                         "domainCred": {
-                            "UserName": "[parameters('adminUsername')]",
+                            "UserName": "[variables('domainAdminUsername')]",
                             "Password": "[parameters('adminPassword')]"
                         }
+                    }
+                }
+            }
+        },
+        {
+            "name": "WAP",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "virtualNetworkDNSUpdate"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('wapTemplateUri')]"
+                },
+                "parameters": {
+                    "newDeployment": {
+                        "value": "false"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "virtualMachineName": {
+                        "value": "[variables('wapVmName')]"
+                    },
+                    "virtualMachineSize": {
+                        "value": "[parameters('virtualMachineSize')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "diagnosticsStorageAccountName": {
+                        "value": "[parameters('diagnosticsStorageAccountName')]"
+                    },
+                    "diagnosticsStorageAccountId": {
+                        "value": "[parameters('diagnosticsStorageAccountId')]"
+                    },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    },
+                    "publicIpAddressType": {
+                        "value": "[parameters('publicIpAddressType')]"
+                    },
+                    "publicIpAddressSku": {
+                        "value": "[parameters('publicIpAddressSku')]"
+                    },
+                    "imageSku": {
+                        "value": "[variables('wapImageSku')]"
+                    },
+                    "enableDiagnostics": {
+                        "value": "[parameters('enableDiagnostics')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[concat(variables('wapVmName'),'/Microsoft.Powershell.DSC')]",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/WAP"
+            ],
+            "properties": {
+                "publisher": "Microsoft.Powershell",
+                "type": "DSC",
+                "typeHandlerVersion": "2.21",
+                "autoUpgradeMinorVersion": true,
+                "forceUpdateTag": "1.02",
+                "settings": {
+                    "configuration": {
+                        "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+                        "script": "[variables('dscExtensionScript')]",
+                        "function": "[variables('wapDscExtensionFunction')]"
+                    },
+                    "configurationArguments": {}
+                },
+                "protectedSettings": {
+                    "configurationArguments": {
                     }
                 }
             }
         }
     ],
     "outputs": {
-
     }
 }

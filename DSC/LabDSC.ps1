@@ -2,6 +2,8 @@ configuration DC {
     param
     (
         [Parameter(Mandatory)] 
+        [string]$domainName,
+        [Parameter(Mandatory)] 
         [pscredential]$safemodeAdministratorCred, 
         [Parameter(Mandatory)] 
         [pscredential]$domainCred, 
@@ -40,7 +42,7 @@ configuration DC {
             Name   = "RSAT-AD-Tools"
         }
         xADDomain ADDomain { 
-            DomainName                    = $ConfigurationData.NonNodeData.DomainName 
+            DomainName                    = $domainName 
             DomainAdministratorCredential = $domainCred 
             SafemodeAdministratorPassword = $safemodeAdministratorCred 
             #DnsDelegationCredential = $DNSDelegationCred 
@@ -50,7 +52,7 @@ configuration DC {
                 xADGroup $_ {
                     Ensure    = 'Present'
                     GroupName = $_
-                    Path      = ("OU={0},DC={1},DC={2}" -f 'FTE', ($ConfigurationData.NonNodeData.DomainName -split '\.')[0], ($ConfigurationData.NonNodeData.DomainName -split '\.')[1])
+                    Path      = ("OU={0},DC={1},DC={2}" -f 'FTE', ($domainName -split '\.')[0], ($domainName -split '\.')[1])
                     DependsOn = '[xADDomain]ADDomain', "[xADOrganizationalUnit]FTE"
                 }
             })
@@ -59,7 +61,7 @@ configuration DC {
                 xADOrganizationalUnit $_ {
                     Ensure    = 'Present'
                     Name      = ($_ -replace '-')
-                    Path      = ('DC={0},DC={1}' -f ($ConfigurationData.NonNodeData.DomainName -split '\.')[0], ($ConfigurationData.NonNodeData.DomainName -split '\.')[1])
+                    Path      = ('DC={0},DC={1}' -f ($domainName -split '\.')[0], ($domainName -split '\.')[1])
                     DependsOn = '[xADDomain]ADDomain'
                 }
             })
@@ -67,13 +69,13 @@ configuration DC {
         @($ConfigurationData.NonNodeData.ADUsers).foreach( {
                 xADUser $_.UserName {
                     Ensure            = 'Present'
-                    DomainName        = $ConfigurationData.NonNodeData.DomainName
+                    DomainName        = $domainName
                     GivenName         = $_.FirstName
                     SurName           = $_.LastName
                     UserName          = $_.UserName
                     UserPrincipalName = $_.UserPrincipalName
                     Department        = $_.Department
-                    Path              = ("OU={0},DC={1},DC={2}" -f $_.OU, ($ConfigurationData.NonNodeData.DomainName -split '\.')[0], ($ConfigurationData.NonNodeData.DomainName -split '\.')[1])
+                    Path              = ("OU={0},DC={1},DC={2}" -f $_.OU, ($domainName -split '\.')[0], ($domainName -split '\.')[1])
                     JobTitle          = $_.Title
                     Password          = $NewADUserCred
                     DependsOn         = '[xADDomain]ADDomain', ("[xADOrganizationalUnit]{0}" -f $_.OU)
@@ -146,6 +148,8 @@ configuration FS {
     param
     (
         [Parameter(Mandatory)] 
+        [string]$domainName,
+        [Parameter(Mandatory)] 
         [pscredential]$domainCred
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
@@ -160,7 +164,7 @@ configuration FS {
         xComputer JoinDomain
         {
             Name          = $env:COMPUTERNAME 
-            DomainName    = $ConfigurationData.NonNodeData.DomainName 
+            DomainName    = $domainName 
             Credential    = $domainCred  # Credential to join to domain
         }
         WindowsFeature installADFS  #install ADFS
@@ -249,50 +253,48 @@ configuration FS {
     }
 }
 
-# Configuration Data for AD
-$ConfigData = @{ 
-    AllNodes    = @( 
-        @{ 
-            Nodename                    = "localhost" 
-            Role                        = "DC" 
-            #DomainName = "teppeiy.local"
-            RetryCount                  = 20  
-            RetryIntervalSec            = 30  
-            PsDscAllowPlainTextPassword = $true
-        }, 
-        @{ 
-            Nodename         = "adfs" 
-            Role             = "ADFS" 
-            #DomainName = "teppeiy.local" 
-            RetryCount       = 20  
-            RetryIntervalSec = 30  
-            #PsDscAllowPlainTextPassword = $true
-        } 
+Configuration WAP
+{
+    param
+    (
     )
-    NonNodeData = @{
-        PowerShellModules   = 'MSOnline', 'AzureAD', 'AzureADPreview'
-        DomainName          = 'teppeiy.local'
-        AdGroups            = 'HR', 'Sales', 'IT', 'VIP'
-        OrganizationalUnits = 'FTE', 'Clients'
- 
-        AdUsers             = @(
-            @{
-                FirstName         = 'User1' 
-                LastName          = '(teppeiy.local)'
-                UserName          = 'user1' #SamAccountName
-                UserPrincipalName = 'user1@teppeiy.local'
-                Department        = 'Sales'
-                OU                = 'FTE'
-                Title             = 'Sales Manager' 
-            }
-            @{
-                FirstName  = 'User2' 
-                LastName   = '(teppeiy.local)'
-                UserName   = 'user2' #SamAccountName
-                Department = 'HR'
-                OU         = 'FTE'
-                Title      = 'HR Manager' 
-            }
-        ) 
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    Import-DscResource -Module PSDesiredStateConfiguration
+
+    Node localhost
+    {
+        LocalConfigurationManager            
+        {            
+            DebugMode = 'All'
+            ActionAfterReboot = 'ContinueConfiguration'            
+            ConfigurationMode = 'ApplyOnly'            
+            RebootNodeIfNeeded = $true
+        }
+
+	    WindowsFeature WebAppProxy
+        {
+            Ensure = "Present"
+            Name = "Web-Application-Proxy"
+        }
+
+        WindowsFeature Tools 
+        {
+            Ensure = "Present"
+            Name = "RSAT-RemoteAccess"
+            IncludeAllSubFeature = $true
+        }
+
+        WindowsFeature MoreTools 
+        {
+            Ensure = "Present"
+            Name = "RSAT-AD-PowerShell"
+            IncludeAllSubFeature = $true
+        }
+
+        WindowsFeature Telnet
+        {
+            Ensure = "Present"
+            Name = "Telnet-Client"
+        }
     }
 }
