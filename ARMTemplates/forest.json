@@ -312,6 +312,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
+                "Microsoft.Resources/Deployments/DC",
                 "[parameters('virtualNetworkName')]"
             ],
             "properties": {
@@ -411,6 +412,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
             "dependsOn": [
+                "Microsoft.Resources/Deployments/DC",
                 "[parameters('virtualNetworkName')]"
             ],
             "properties": {
