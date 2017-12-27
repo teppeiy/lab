@@ -75,12 +75,13 @@
             ],
             "defaultValue": "2012-R2-Datacenter"
         },
-        "enableDiagnostics":{
+        "enableDiagnostics": {
             "type": "string",
             "defaultValue": "true"
         }
     },
     "variables": {
+        "nsgTemplateURI": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/nsg.json')]",
         "domainAdminUsername": "[concat(parameters('domainName'),'\\',parameters('adminUsername'))]",
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
@@ -91,22 +92,74 @@
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
         "dcDscExtensionFunction": "DC",
-        
+
         "fsTemplateUri": "[variables('dcTemplateUri')]",
         "fsVmName": "[concat(parameters('virtualMachineName'), '-FS')]",
         "fsImageSku": "[parameters('imageSku')]",
         "fsDscExtensionFunction": "FS",
-        
+
         "wapTemplateUri": "[variables('dcTemplateUri')]",
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
-        "wapDscExtensionFunction": "WAP"
+        "wapDscExtensionFunction": "WAP",
+        "subnets": [{
+            "name": "[parameters('subnetName')]",
+            "properties": {
+                "addressPrefix": "[parameters('subnetPrefix')]"
+            }
+        }, {
+            "name": "[parameters('dmzSubnetName')]",
+            "properties": {
+                "addressPrefix": "[parameters('dmzSubnetPrefix')]"
+            }
+        }]
     },
-    "resources": [
+    "resources": [{
+            "name": "[parameters('virtualNetworkName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2017-06-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefix')]"
+                    ]
+                },
+                "subnets": "[variables('subnets')]"
+            }
+        },
+        {
+            "name": "NSGs",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2015-01-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nsgTemplateURI')]"
+                },
+                "parameters": {
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "subnetPrefix": {
+                        "value": "[parameters('subnetPrefix')]"
+                    },
+                    "dmzSubnetName": {
+                        "value": "[parameters('dmzSubnetName')]"
+                    },
+                    "dmzSubnetPrefix": {
+                        "value": "[parameters('dmzSubnetPrefix')]"
+                    }
+                }
+            }
+        },
         {
             "name": "DC",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "[parameters('virtualNetworkName')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -114,7 +167,7 @@
                 },
                 "parameters": {
                     "newDeployment": {
-                        "value": "true"
+                        "value": "false"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -236,12 +289,7 @@
                                     "[parameters('addressPrefix')]"
                                 ]
                             },
-                            "subnets": [{
-                                "name": "[parameters('subnetName')]",
-                                "properties": {
-                                    "addressPrefix": "[parameters('subnetPrefix')]"
-                                }
-                            }]
+                            "subnets": "[variables('subnets')]"
                         }
                     }]
                 }
@@ -251,6 +299,9 @@
             "name": "FS",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "[parameters('virtualNetworkName')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -347,6 +398,9 @@
             "name": "WAP",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2015-01-01",
+            "dependsOn": [
+                "[parameters('virtualNetworkName')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -427,12 +481,10 @@
                     "configurationArguments": {}
                 },
                 "protectedSettings": {
-                    "configurationArguments": {
-                    }
+                    "configurationArguments": {}
                 }
             }
         }
     ],
-    "outputs": {
-    }
+    "outputs": {}
 }
