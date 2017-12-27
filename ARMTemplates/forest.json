@@ -54,6 +54,12 @@
         "subnetPrefix": {
             "type": "string"
         },
+        "dmzSubnetName": {
+            "type": "string"
+        },
+        "dmzSubnetPrefix": {
+            "type": "string"
+        },
         "publicIpAddressType": {
             "type": "string"
         },
@@ -308,7 +314,8 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "Microsoft.Resources/Deployments/FS"
+                "Microsoft.Resources/Deployments/FS",
+                "virtualNetworkDNSUpdate"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
@@ -377,10 +384,10 @@
                         "value": "[parameters('addressPrefix')]"
                     },
                     "subnetName": {
-                        "value": "[parameters('subnetName')]"
+                        "value": "[parameters('dmzSubnetName')]"
                     },
                     "subnetPrefix": {
-                        "value": "[parameters('subnetPrefix')]"
+                        "value": "[parameters('dmzSubnetPrefix')]"
                     },
                     "publicIpAddressType": {
                         "value": "[parameters('publicIpAddressType')]"

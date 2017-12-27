@@ -161,12 +161,18 @@ configuration FS {
             DebugMode          = 'All'
             RebootNodeIfNeeded = $true
         }
+        xPendingReboot Reboot1
+        {
+            # Make sure to refresh DNS Server address
+            Name = "RebootServer"        
+        }
         xWaitForADDomain DscForestWait 
         { 
             DomainName = $DomainName 
             DomainUserCredential= $domainCreds
             RetryCount = $ConfigData.NonNodeData.RetryIntervalSec
             RetryIntervalSec = $ConfigData.NonNodeData.RetryIntervalSec
+            DependsOn = "[xPendingReboot]Reboot1"
         }
         xComputer JoinDomain
         {
@@ -175,16 +181,16 @@ configuration FS {
             Credential    = $domainCred  # Credential to join to domain
             DependsOn = "[xWaitForADDomain]DscForestWait"
         }
-        xPendingReboot Reboot1
-{ 
-   Name = "RebootServer"
-   DependsOn = "[xComputer]JoinDomain"
-}
+        xPendingReboot Reboot2
+        { 
+            Name = "RebootServer"
+            DependsOn = "[xComputer]JoinDomain"
+        }
         WindowsFeature installADFS  #install ADFS
         {
             Ensure = "Present"
             Name   = "ADFS-Federation"
-            DependsOn = "[xPendingReboot]Reboot1"
+            DependsOn = "[xPendingReboot]Reboot2"
         }
         <#
         WindowsFeature RSAT-AD-AdminCenter {
