@@ -2,6 +2,13 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "assetLocation": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/teppeiy/lab/master/ARMTemplates/",
+            "metadata": {
+                "description": "This is the location in which all the linked templates are stored."
+            }
+        },
         "location": {
             "type": "string"
         },
@@ -52,7 +59,7 @@
         }
     },
     "variables": {
-        "dcTemplateUri": "single_vm_template.json"
+        "dcTemplateUri": "[concat(parameters('assetLocation'), 'single_vm_template.json')]"
     },
     "resources": [
         {
