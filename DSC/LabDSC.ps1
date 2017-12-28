@@ -44,9 +44,12 @@ configuration DC {
         
         Script DeployADDSDeploymentWrapper {
             SetScript  = {
-                "C:\"
-                $MSIPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
-                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/teppeiy/lab/master/" -OutFile $MSIPath
+                $modulePath = "C:\Program Files\WindowsPowerShell\Modules\ADDSDeployment\"
+                if(!(Test-Path -Path $modulePath)){
+                    New-item -Path $modulePath -ItemType Directory
+                    }
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/ADDSDeployment/ADDSDeployment.psm1" -OutFile "$modulePath\ADDSDeployment.psm1"
+                Import-Module -Name "ADDSDeployment"
             }
 
             GetScript  = { @{} }
@@ -61,7 +64,7 @@ configuration DC {
             DomainAdministratorCredential = $domainCred 
             SafemodeAdministratorPassword = $safemodeAdministratorCred 
             #DnsDelegationCredential = $DNSDelegationCred 
-            DependsOn                     = "[WindowsFeature]ADDSInstall" 
+            DependsOn                     = "[WindowsFeature]ADDSInstall", "[Script]DeployADDSDeploymentWrapper"
         }
         
         @($ConfigurationData.NonNodeData.ADGroups).foreach( {
