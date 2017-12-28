@@ -41,6 +41,21 @@ configuration DC {
             Ensure = "Present"
             Name   = "RSAT-AD-Tools"
         }
+        
+        Script DeployADDSDeploymentWrapper {
+            SetScript  = {
+                "C:\"
+                $MSIPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
+                Invoke-WebRequest -Uri "https://raw.githubusercontent.com/teppeiy/lab/master/" -OutFile $MSIPath
+            }
+
+            GetScript  = { @{} }
+            TestScript = { 
+                $key = Get-Module -Name "ADDSDeployment" -ListAvailable
+                return ($key -ine $null)
+            }
+        }
+
         xADDomain ADDomain { 
             DomainName                    = $domainName 
             DomainAdministratorCredential = $domainCred 
@@ -48,6 +63,7 @@ configuration DC {
             #DnsDelegationCredential = $DNSDelegationCred 
             DependsOn                     = "[WindowsFeature]ADDSInstall" 
         }
+        
         @($ConfigurationData.NonNodeData.ADGroups).foreach( {
                 xADGroup $_ {
                     Ensure    = 'Present'
