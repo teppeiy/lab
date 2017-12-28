@@ -421,6 +421,7 @@
             }
         },
         {
+            "condition": "[equals(parameters('privateIPAllocationMethod'), 'Dynamic')]",
             "name": "[variables('networkInterfaceName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2016-09-01",
@@ -449,7 +450,6 @@
             }
         },
         {
-            "condition": "[equals(parameters('privateIPAllocationMethod'), 'Static')]",
             "name": "[variables('publicIpAddressName')]",
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2017-08-01",
