@@ -84,16 +84,22 @@
         "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/base_vm.json')]",
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
+        "dcDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+        "dcDscExtensionScript": "[variables('dscExtensionScript')]",
         "dcDscExtensionFunction": "DC",
 
         "fsTemplateUri": "[variables('dcTemplateUri')]",
         "fsVmName": "[concat(parameters('virtualMachineName'), '-FS')]",
         "fsImageSku": "[parameters('imageSku')]",
+        "fsDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+        "fsDscExtensionScript": "[variables('dscExtensionScript')]",
         "fsDscExtensionFunction": "FS",
 
         "wapTemplateUri": "[variables('dcTemplateUri')]",
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
+        "wapDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
+        "wapDscExtensionScript": "[variables('dscExtensionScript')]",
         "wapDscExtensionFunction": "WAP",
 
         "nsgName": "[concat(parameters('subnetName'),'-NSG')]",
@@ -244,8 +250,8 @@
                 "forceUpdateTag": "1.02",
                 "settings": {
                     "configuration": {
-                        "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
-                        "script": "[variables('dscExtensionScript')]",
+                        "url": "[variables('dcDscExtensionUrl')]",
+                        "script": "[variables('dcDscExtensionScript')]",
                         "function": "[variables('dcDscExtensionFunction')]"
                     },
                     "configurationArguments": {
@@ -388,8 +394,8 @@
                 "forceUpdateTag": "1.02",
                 "settings": {
                     "configuration": {
-                        "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
-                        "script": "[variables('dscExtensionScript')]",
+                        "url": "[variables('fsDscExtensionUrl')]",
+                        "script": "[variables('fsDscExtensionScript')]",
                         "function": "[variables('fsDscExtensionFunction')]"
                     },
                     "configurationArguments": {
@@ -487,8 +493,8 @@
                 "forceUpdateTag": "1.02",
                 "settings": {
                     "configuration": {
-                        "url": "[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
-                        "script": "[variables('dscExtensionScript')]",
+                        "url": "[variables('wapDscExtensionUrl')]",
+                        "script": "[variables('wapDscExtensionScript')]",
                         "function": "[variables('wapDscExtensionFunction')]"
                     },
                     "configurationArguments": {}

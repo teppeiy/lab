@@ -420,7 +420,6 @@
                 }
             }
         },
-    
         {
             "name": "[variables('publicIpAddressName')]",
             "type": "Microsoft.Network/publicIpAddresses",
