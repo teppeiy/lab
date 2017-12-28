@@ -32,12 +32,16 @@ function  Install-ADDSForest {
 
     $netbiosName = $DomainName.Split(".")[0]
     $RebootOnCompletion = !$NoRebootOnCompletion
+
+    $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SafeModeAdministratorPassword)
+    $UnsecureSafeModeAdminPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+
     $pwd = ConvertFrom-SecureString $SafeModeAdministratorPassword
 
     "[DCInstall]" >> $unattendedFile
     "NewDomain=Forest" >> $unattendedFile
     "ReplicaOrNewDomain=Domain" >> $unattendedFile
-    "SafeModeAdminPassword=$pwd" >> $unattendedFile
+    "SafeModeAdminPassword=$UnsecureSafeModeAdminPassword" >> $unattendedFile
     if ($RebootOnCompletion) {
         "RebootOnCompletion=Yes" >> $unattendedFile
     }
@@ -45,8 +49,11 @@ function  Install-ADDSForest {
         "RebootOnCompletion=No" >> $unattendedFile 
     }
     if ($PSBoundParameters.ContainsKey('DnsDelegationCredential')) {
-        #$installADDSParams['DnsDelegationCredential'] = $DnsDelegationCredential;
-        #$installADDSParams['CreateDnsDelegation'] = $true;
+        "CreateDNSDelegation=Yes" >> $unattendedFile
+        "DNSDelegationUserName=$DnsDelegationCredential.UserName" >> $unattendedFile
+        $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SafeModeAdministratorPassword)
+        $UnsecureDNSDelegationPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+        "DNSDelegationPassword=$UnsecureDNSDelegationPassword"  >> $unattendedFile
     }
     if ($PSBoundParameters.ContainsKey('DatabasePath')) {
         "DatabasePath=$DatabasePath" >> $unattendedFile
