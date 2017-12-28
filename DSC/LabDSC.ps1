@@ -51,7 +51,6 @@ configuration DC {
                 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/ADDSDeployment/ADDSDeployment.psm1" -OutFile "$modulePath\ADDSDeployment.psm1"
                 Import-Module -Name "ADDSDeployment"
             }
-
             GetScript  = { @{} }
             TestScript = { 
                 $key = Get-Module -Name "ADDSDeployment" -ListAvailable

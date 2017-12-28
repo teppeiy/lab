@@ -1,3 +1,4 @@
+# https://support.microsoft.com/en-us/help/947034/how-to-use-unattended-mode-to-install-and-remove-active-directory-doma
 function  Install-ADDSForest {
     param
     (
@@ -6,10 +7,10 @@ function  Install-ADDSForest {
         [switch] $CreateDnsDelegation,
         [string] $DatabasePath,
         [PSCredential] $DnsDelegationCredential,
-        [string] $DomainMode=4,
+        [string] $DomainMode = 4,
         [string] $DomainNetbiosName,
         [switch] $Force,
-        [string] $ForestMode=4,
+        [string] $ForestMode = 4,
         [switch] $InstallDns,
         [string] $LogPath,
         [switch] $NoDnsOnNetwork,
@@ -37,8 +38,12 @@ function  Install-ADDSForest {
     "NewDomain=Forest" >> $unattendedFile
     "ReplicaOrNewDomain=Domain" >> $unattendedFile
     "SafeModeAdminPassword=$pwd" >> $unattendedFile
-    "RebootOnCompletion=$RebootOnCompletion" >> $unattendedFile
-
+    if ($RebootOnCompletion) {
+        "RebootOnCompletion=Yes" >> $unattendedFile
+    }
+    else {
+        "RebootOnCompletion=No" >> $unattendedFile 
+    }
     if ($PSBoundParameters.ContainsKey('DnsDelegationCredential')) {
         #$installADDSParams['DnsDelegationCredential'] = $DnsDelegationCredential;
         #$installADDSParams['CreateDnsDelegation'] = $true;
