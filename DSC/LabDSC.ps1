@@ -404,7 +404,10 @@ configuration FS-DOWNLEVEL {
                 $dt = "C:\Users\Public\Desktop\"
                 $links = @(
                     @{site = "%windir%\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe"; name = "PowerShell ISE"; icon = "%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell_ise.exe, 0"},
-                    @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"}
+                    @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"},
+                    @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"},
+                    @{site = "%ProgramFiles%\Active Directory Federation Services 2.0\Microsoft.IdentityServer.msc"; name = "AD FS 2.0 Management"; icon = "%ProgramFiles%\Active Directory Federation Services 2.0\Microsoft.IdentityServer.NativeResources.dll, 0"},
+                    @{site = "%windir%\system32\inetsrv\InetMgr.exe"; name = "Internet Information Services (IIS) Manager"; icon = "%windir%\system32\inetsrv\InetMgr.exe, 0"}
                 )
 
                 foreach ($link in $links) {
@@ -560,6 +563,42 @@ Configuration WAP-DOWNLEVEL
                 return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
             }
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core"
+        }
+        xRemoteFile ConfigurationScript {
+            Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
+            DestinationPath = "C:\Users\Public\Desktop"
+        }
+        Script DeployLinks {
+            SetScript  = {
+                $WshShell = New-Object -comObject WScript.Shell
+                $dt = "C:\Users\Public\Desktop\"
+                $links = @(
+                    @{site = "%windir%\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe"; name = "PowerShell ISE"; icon = "%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell_ise.exe, 0"},
+
+                    @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"},
+                    @{site = "%ProgramFiles%\Active Directory Federation Services 2.0\FspConfigWizard.exe"; name = "AD FS 2.0 Federation Server Proxy Configuration Wizard"; icon = "%ProgramFiles%\Active Directory Federation Services 2.0\FspConfigWizard.exe, 0"},
+                    
+                    @{site = "%windir%\system32\inetsrv\InetMgr.exe"; name = "Internet Information Services (IIS) Manager"; icon = "%windir%\system32\inetsrv\InetMgr.exe, 0"}
+                )
+
+                foreach ($link in $links) {
+                    $Shortcut = $WshShell.CreateShortcut("$($dt)$($link.name).lnk")
+                    $Shortcut.TargetPath = $link.site
+                    $Shortcut.IconLocation = $link.icon
+                    $Shortcut.Save()
+                }
+            }
+            GetScript  = { @{} }
+            TestScript = {
+                $icons = Get-ChildItem -Path "C:\Users\Public\Desktop\"
+                $result = 0
+                foreach ($i in $icons) {
+                    if (($i.name).endswith('.lnk')) {
+                        $result++
+                    }
+                }
+                return ($result -gt 0)
+            }
         }
     }
 }
