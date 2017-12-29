@@ -16,15 +16,17 @@
         RetryIntervalSec    = 30
         PowerShellModules   = 'MSOnline', 'AzureAD', 'AzureADPreview'
         AdGroups            = 'HR', 'Sales', 'IT', 'VIP'
-        OrganizationalUnits = 'FTE', 'Clients'
+        OrganizationalUnits = 'Users', 'FTE', 'Clients'
  
         AdUsers             = @(
             @{
                 FirstName         = 'adfs_svc' 
-                LastName          = 'for 2008R2'
+                LastName          = 'For 2008R2'
                 UserName          = 'adfs_svc' #SamAccountName
                 UserPrincipalName = 'adfs_svc@teppeiy.local'
+                Department        = ''
                 OU                = 'Users'
+                Title             = '' 
             }
             @{
                 FirstName         = 'User1' 

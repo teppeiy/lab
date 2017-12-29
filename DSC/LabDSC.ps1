@@ -25,29 +25,18 @@ configuration DC {
             Ensure = "Present" 
             Name   = "AD-Domain-Services"
         }
-        WindowsFeature RSAT-AD-AdminCenter {
-            Ensure = "Present"
-            Name   = "RSAT-AD-AdminCenter"
-        }
-        WindowsFeature RSAT-ADDS {
-            Ensure = "Present"
-            Name   = "RSAT-ADDS"
-        }
-        WindowsFeature RSAT-AD-PowerShell {
-            Ensure = "Present"
-            Name   = "RSAT-AD-PowerShell"
-        }
-        WindowsFeature RSAT-AD-Tools {
-            Ensure = "Present"
-            Name   = "RSAT-AD-Tools"
-        }
+
+        WindowsFeatureSet RSATInstall {
+            Name   = @("RSAT-AD-AdminCenter", "RSAT-ADDS", "RSAT-AD-PowerShell", "RSAT-AD-Tools")
+            Ensure = 'Present'
+        } 
         
         Script DeployADDSDeploymentWrapper {
             SetScript  = {
                 $modulePath = "C:\Program Files\WindowsPowerShell\Modules\ADDSDeployment\"
-                if(!(Test-Path -Path $modulePath)){
+                if (!(Test-Path -Path $modulePath)) {
                     New-item -Path $modulePath -ItemType Directory
-                    }
+                }
                 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/ADDSDeployment/ADDSDeployment.psm1" -OutFile "$modulePath\ADDSDeployment.psm1"
                 Import-Module -Name "ADDSDeployment"
             }
@@ -145,7 +134,7 @@ configuration DC {
             }
         }
         xRemoteFile DownloadAzureADConnect {
-            Uri = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+            Uri             = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
             DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
         }
         Script InstallAzureADConnect {            
@@ -159,7 +148,7 @@ configuration DC {
             {
                 return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
-            DependsOn = "[xRemoteFile]DownloadAzureADConnect"
+            DependsOn  = "[xRemoteFile]DownloadAzureADConnect"
         }
     }
 }
@@ -180,54 +169,38 @@ configuration FS {
             DebugMode          = 'All'
             RebootNodeIfNeeded = $true
         }
-        xPendingReboot Reboot1
-        {
+        xPendingReboot Reboot1 {
             # Make sure to refresh DNS Server address
             Name = "RebootServer"        
         }
-        xWaitForADDomain DscForestWait 
-        { 
-            DomainName = $DomainName 
-            DomainUserCredential= $domainCreds
-            RetryCount = $ConfigData.NonNodeData.RetryIntervalSec
-            RetryIntervalSec = $ConfigData.NonNodeData.RetryIntervalSec
-            DependsOn = "[xPendingReboot]Reboot1"
+        xWaitForADDomain DscForestWait { 
+            DomainName           = $DomainName 
+            DomainUserCredential = $domainCreds
+            RetryCount           = $ConfigData.NonNodeData.RetryIntervalSec
+            RetryIntervalSec     = $ConfigData.NonNodeData.RetryIntervalSec
+            DependsOn            = "[xPendingReboot]Reboot1"
         }
-        xComputer JoinDomain
-        {
-            Name          = $env:COMPUTERNAME 
-            DomainName    = $domainName 
-            Credential    = $domainCred  # Credential to join to domain
-            DependsOn = "[xWaitForADDomain]DscForestWait"
+        xComputer JoinDomain {
+            Name       = $env:COMPUTERNAME 
+            DomainName = $domainName 
+            Credential = $domainCred  # Credential to join to domain
+            DependsOn  = "[xWaitForADDomain]DscForestWait"
         }
-        xPendingReboot Reboot2
-        { 
-            Name = "RebootServer"
+        xPendingReboot Reboot2 { 
+            Name      = "RebootServer"
             DependsOn = "[xComputer]JoinDomain"
         }
-        WindowsFeature installADFS  #install ADFS
-        {
-            Ensure = "Present"
-            Name   = "ADFS-Federation"
+        WindowsFeature installADFS {
+            Ensure    = "Present"
+            Name      = "ADFS-Federation"
             DependsOn = "[xPendingReboot]Reboot2"
         }
         <#
-        WindowsFeature RSAT-AD-AdminCenter {
-            Ensure = "Present"
-            Name   = "RSAT-AD-AdminCenter"
-        }
-        WindowsFeature RSAT-ADDS {
-            Ensure = "Present"
-            Name   = "RSAT-ADDS"
-        }
-        WindowsFeature RSAT-AD-PowerShell {
-            Ensure = "Present"
-            Name   = "RSAT-AD-PowerShell"
-        }
-        WindowsFeature RSAT-AD-Tools {
-            Ensure = "Present"
-            Name   = "RSAT-AD-Tools"
-        }
+        WindowsFeatureSet RSATInstall
+        {
+            Name = @("RSAT-AD-AdminCenter", "RSAT-ADDS", "RSAT-AD-PowerShell","RSAT-AD-Tools")
+            Ensure = 'Present'
+        } 
        #>
         foreach ($m in @($ConfigurationData.NonNodeData.PowerShellModules)) {
             Script $m {
@@ -308,57 +281,35 @@ configuration FS-DOWNLEVEL {
             DebugMode          = 'All'
             RebootNodeIfNeeded = $true
         }
-        xPendingReboot Reboot1
-        {
+        xPendingReboot Reboot1 {
             # Make sure to refresh DNS Server address
             Name = "RebootServer"        
         }
-        xWaitForADDomain DscForestWait 
-        { 
-            DomainName = $DomainName 
-            DomainUserCredential= $domainCreds
-            RetryCount = $ConfigData.NonNodeData.RetryIntervalSec
-            RetryIntervalSec = $ConfigData.NonNodeData.RetryIntervalSec
-            DependsOn = "[xPendingReboot]Reboot1"
+        xWaitForADDomain DscForestWait { 
+            DomainName           = $DomainName 
+            DomainUserCredential = $domainCreds
+            RetryCount           = $ConfigData.NonNodeData.RetryIntervalSec
+            RetryIntervalSec     = $ConfigData.NonNodeData.RetryIntervalSec
+            DependsOn            = "[xPendingReboot]Reboot1"
         }
-        xComputer JoinDomain
-        {
-            Name          = $env:COMPUTERNAME 
-            DomainName    = $domainName 
-            Credential    = $domainCred  # Credential to join to domain
-            DependsOn = "[xWaitForADDomain]DscForestWait"
+        xComputer JoinDomain {
+            Name       = $env:COMPUTERNAME 
+            DomainName = $domainName 
+            Credential = $domainCred  # Credential to join to domain
+            DependsOn  = "[xWaitForADDomain]DscForestWait"
         }
-        xPendingReboot Reboot2
-        { 
-            Name = "RebootServer"
+        xPendingReboot Reboot2 { 
+            Name      = "RebootServer"
             DependsOn = "[xComputer]JoinDomain"
         }
-         <#
-        WindowsFeature installADFS  #install ADFS
+        <#
+        WindowsFeatureSet RSATInstall
         {
-            Ensure = "Present"
-            Name   = "ADFS-Federation"
-            DependsOn = "[xPendingReboot]Reboot2"
-        }
-       
-        WindowsFeature RSAT-AD-AdminCenter {
-            Ensure = "Present"
-            Name   = "RSAT-AD-AdminCenter"
-        }
-        WindowsFeature RSAT-ADDS {
-            Ensure = "Present"
-            Name   = "RSAT-ADDS"
-        }
-        WindowsFeature RSAT-AD-PowerShell {
-            Ensure = "Present"
-            Name   = "RSAT-AD-PowerShell"
-        }
-        WindowsFeature RSAT-AD-Tools {
-            Ensure = "Present"
-            Name   = "RSAT-AD-Tools"
-        }
+            Name = @("RSAT-AD-AdminCenter", "RSAT-ADDS", "RSAT-AD-PowerShell","RSAT-AD-Tools")
+            Ensure = 'Present'
+        } 
        #>
-       WindowsFeature NET-Framework-Core {
+        WindowsFeature NET-Framework-Core {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
         }
@@ -430,7 +381,7 @@ configuration FS-DOWNLEVEL {
             }
         }
         xRemoteFile DownloadAzureADConnect {
-            Uri = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+            Uri             = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
             DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
         }
         Script InstallAzureADConnect {            
@@ -444,7 +395,7 @@ configuration FS-DOWNLEVEL {
             {
                 return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
-            DependsOn = "[xRemoteFile]DownloadAzureADConnect"
+            DependsOn  = "[xRemoteFile]DownloadAzureADConnect"
         }
         xRemoteFile ConfigurationScript {
             Uri             = "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/CertHelperScript.ps1"
@@ -463,38 +414,26 @@ Configuration WAP
 
     Node localhost
     {
-        LocalConfigurationManager            
-        {            
-            DebugMode = 'All'
-            ActionAfterReboot = 'ContinueConfiguration'            
-            ConfigurationMode = 'ApplyOnly'            
+        LocalConfigurationManager {            
+            DebugMode          = 'All'
+            ActionAfterReboot  = 'ContinueConfiguration'            
+            ConfigurationMode  = 'ApplyOnly'            
             RebootNodeIfNeeded = $true
         }
 
-	    WindowsFeature WebAppProxy
-        {
+        WindowsFeature WebAppProxy {
             Ensure = "Present"
-            Name = "Web-Application-Proxy"
+            Name   = "Web-Application-Proxy"
         }
-
-        WindowsFeature Tools 
-        {
+        WindowsFeature Telnet {
             Ensure = "Present"
-            Name = "RSAT-RemoteAccess"
+            Name   = "Telnet-Client"
+        }
+        WindowsFeatureSet RSATInstall
+        {
+            Name = @("RSAT-RemoteAccess", "RSAT-AD-PowerShell")
+            Ensure = 'Present'
             IncludeAllSubFeature = $true
-        }
-
-        WindowsFeature MoreTools 
-        {
-            Ensure = "Present"
-            Name = "RSAT-AD-PowerShell"
-            IncludeAllSubFeature = $true
-        }
-
-        WindowsFeature Telnet
-        {
-            Ensure = "Present"
-            Name = "Telnet-Client"
         }
     }
 }
@@ -509,49 +448,30 @@ Configuration WAP-DOWNLEVEL
 
     Node localhost
     {
-        LocalConfigurationManager            
-        {            
-            DebugMode = 'All'
-            ActionAfterReboot = 'ContinueConfiguration'            
-            ConfigurationMode = 'ApplyOnly'            
+        LocalConfigurationManager {            
+            DebugMode          = 'All'
+            ActionAfterReboot  = 'ContinueConfiguration'            
+            ConfigurationMode  = 'ApplyOnly'            
             RebootNodeIfNeeded = $true
         }
-        <#
-	    WindowsFeature WebAppProxy
-        {
-            Ensure = "Present"
-            Name = "Web-Application-Proxy"
-        }
-        
-        WindowsFeature Tools 
-        {
-            Ensure = "Present"
-            Name = "RSAT-RemoteAccess"
-            IncludeAllSubFeature = $true
-        }
-        #>
-        WindowsFeature MoreTools 
-        {
-            Ensure = "Present"
-            Name = "RSAT-AD-PowerShell"
+        WindowsFeature MoreTools {
+            Ensure               = "Present"
+            Name                 = "RSAT-AD-PowerShell"
             IncludeAllSubFeature = $true
         }
 
-        WindowsFeature Telnet
-        {
+        WindowsFeature Telnet {
             Ensure = "Present"
-            Name = "Telnet-Client"
+            Name   = "Telnet-Client"
         }
         WindowsFeature NET-Framework-Core {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
         }
-    
         xRemoteFile DownloadADFS {
             Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
             DestinationPath = "C:\Users\Public\Downloads\AdfsSetup.exe"
         }
-        
         Script InstallADFS {            
             GetScript  = { @{} }
             SetScript  = 
