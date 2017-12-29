@@ -16,7 +16,7 @@
         RetryIntervalSec    = 30
         PowerShellModules   = 'MSOnline', 'AzureAD', 'AzureADPreview'
         AdGroups            = 'HR', 'Sales', 'IT', 'VIP'
-        OrganizationalUnits = 'Users', 'FTE', 'Clients'
+        OrganizationalUnits = 'FTE', 'Clients'
  
         AdUsers             = @(
             @{
