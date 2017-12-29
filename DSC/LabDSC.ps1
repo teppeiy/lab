@@ -333,13 +333,14 @@ configuration FS-DOWNLEVEL {
             Name = "RebootServer"
             DependsOn = "[xComputer]JoinDomain"
         }
+         <#
         WindowsFeature installADFS  #install ADFS
         {
             Ensure = "Present"
             Name   = "ADFS-Federation"
             DependsOn = "[xPendingReboot]Reboot2"
         }
-        <#
+       
         WindowsFeature RSAT-AD-AdminCenter {
             Ensure = "Present"
             Name   = "RSAT-AD-AdminCenter"
@@ -372,7 +373,7 @@ configuration FS-DOWNLEVEL {
             SetScript  = 
             {
                 $exePath = "C:\Users\Public\Downloads\AdfsSetup.exe"
-                $options = "/quiet /LogFile C:\dsc\AdfsSetup.log"
+                $options = "/quiet /LogFile C:\AdfsSetup.log"
                 #$options = "/quiet /proxy /LogFile C:\dsc\AdfsSetup.log"
                 Invoke-Expression "& $exePath $options"
             }
@@ -550,7 +551,7 @@ Configuration WAP-DOWNLEVEL
             {
                 $exePath = "C:\Users\Public\Downloads\AdfsSetup.exe"
                 #$options = "/quiet /LogFile C:\dsc\AdfsSetup.log"
-                $options = "/quiet /proxy /LogFile C:\dsc\AdfsSetup.log"
+                $options = "/quiet /proxy /LogFile C:\AdfsSetup.log"
                 Invoke-Expression "& $exePath $options"
             }
             TestScript = 

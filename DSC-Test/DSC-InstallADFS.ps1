@@ -9,7 +9,11 @@
             ActionAfterReboot  = 'ContinueConfiguration'           
             RebootNodeIfNeeded = $false
         }
-
+        WindowsFeature installADFS  #install ADFS
+        {
+            Ensure = "Absent"
+            Name   = "ADFS-Federation"
+        }
         WindowsFeature NET-Framework-Core {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
@@ -25,7 +29,7 @@
             SetScript  = 
             {
                 $exePath = "C:\Users\Public\Downloads\AdfsSetup.exe"
-                $options = "/quiet /LogFile C:\dsc\AdfsSetup.log"
+                $options = "/quiet /LogFile C:\AdfsSetup.log"
                 #$options = "/quiet /proxy /LogFile C:\dsc\AdfsSetup.log"
                 Invoke-Expression "& $exePath $options"
             }
@@ -34,7 +38,7 @@
                 #return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
                 return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
             }
-            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core"
+            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]installADFS"
         }
        
         Script ConfigureADFS {
