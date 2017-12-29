@@ -24,6 +24,7 @@
                 LastName          = 'for 2008R2'
                 UserName          = 'adfs_svc' #SamAccountName
                 UserPrincipalName = 'adfs_svc@teppeiy.local'
+                OU                = 'Users'
             }
             @{
                 FirstName         = 'User1' 

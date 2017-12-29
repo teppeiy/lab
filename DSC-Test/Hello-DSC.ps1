@@ -1,8 +1,15 @@
 ﻿Configuration DSCBlockTest
 {
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module xPSDesiredStateConfiguration
     Node "localhost"
     {
+        LocalConfigurationManager            
+        {            
+            DebugMode = 'All'
+            ActionAfterReboot = 'ContinueConfiguration'                    
+            RebootNodeIfNeeded = $false
+        }
         xRemoteFile DownloadADFS {
             Uri = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
             DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
