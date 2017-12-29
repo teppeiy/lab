@@ -20,15 +20,6 @@
  
         AdUsers             = @(
             @{
-                FirstName         = 'adfs_svc' 
-                LastName          = 'For 2008R2'
-                UserName          = 'adfs_svc' #SamAccountName
-                UserPrincipalName = 'adfs_svc@teppeiy.local'
-                Department        = ''
-                OU                = 'Users'
-                Title             = '' 
-            }
-            @{
                 FirstName         = 'User1' 
                 LastName          = '(teppeiy.local)'
                 UserName          = 'user1' #SamAccountName
