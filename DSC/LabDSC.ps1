@@ -446,6 +446,10 @@ configuration FS-DOWNLEVEL {
             }
             DependsOn = "[xRemoteFile]DownloadAzureADConnect"
         }
+        xRemoteFile ConfigurationScript {
+            Uri             = "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/CertHelperScript.ps1"
+            DestinationPath = "C:\Users\Public\Desktop\CertHelperScript.ps1"
+        }
     }
 }
 
@@ -565,8 +569,8 @@ Configuration WAP-DOWNLEVEL
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core"
         }
         xRemoteFile ConfigurationScript {
-            Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
-            DestinationPath = "C:\Users\Public\Desktop"
+            Uri             = "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/CertHelperScript.ps1"
+            DestinationPath = "C:\Users\Public\Desktop\CertHelperScript.ps1"
         }
         Script DeployLinks {
             SetScript  = {
