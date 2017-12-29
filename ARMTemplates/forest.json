@@ -93,14 +93,14 @@
         "fsImageSku": "[parameters('imageSku')]",
         "fsDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "fsDscExtensionScript": "[variables('dscExtensionScript')]",
-        "fsDscExtensionFunction": "FS",
+        "fsDscExtensionFunction": "[if(equals(variables('fsImageSku'), '2008-R2-SP1'), 'FS-DOWNLEVEL', 'FS')]",                
 
         "wapTemplateUri": "[variables('dcTemplateUri')]",
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
         "wapDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "wapDscExtensionScript": "[variables('dscExtensionScript')]",
-        "wapDscExtensionFunction": "WAP",
+        "wapDscExtensionFunction": "[if(equals(variables('wapImageSku'), '2008-R2-SP1'), 'WAP-DOWNLEVEL', 'WAP')]",  
 
         "nsgName": "[concat(parameters('subnetName'),'-NSG')]",
         "dmzNsgName": "[concat(parameters('dmzSubnetName'),'-NSG')]",

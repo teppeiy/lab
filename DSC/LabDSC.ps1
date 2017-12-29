@@ -13,13 +13,13 @@ configuration DC {
         [pscredential]$NewADUserCred 
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-    Import-DscResource -Module PSDesiredStateConfiguration, xActiveDirectory
+    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory
 
     Node $AllNodes.Where{$_.Role -eq "DC"}.Nodename 
     {
         LocalConfigurationManager {
             DebugMode          = 'All'
-            RebootNodeIfNeeded = $true
+            RebootNodeIfNeeded = $false
         }
         WindowsFeature ADDSInstall { 
             Ensure = "Present" 
@@ -144,24 +144,25 @@ configuration DC {
                 return ($result -gt 0)
             }
         }
+        xRemoteFile DownloadAzureADConnect {
+            Uri = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+            DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
+        }
         Script InstallAzureADConnect {            
             GetScript  = { @{} }
             SetScript  = 
             {
                 $MSIPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi" -OutFile $MSIPath
                 Invoke-Expression "& $env:SystemRoot\system32\msiexec.exe /i $MSIPath /qn /passive /forcerestart"
             }
-
             TestScript = 
             {
                 return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
+            DependsOn = "[xRemoteFile]DownloadAzureADConnect"
         }
-
     }
 }
-
 configuration FS {
     param
     (
@@ -171,7 +172,7 @@ configuration FS {
         [pscredential]$domainCred
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-    Import-DscResource -Module PSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
+    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
 
     Node 'localhost'
     {
@@ -270,21 +271,151 @@ configuration FS {
                 return ($result -gt 0)
             }
         }
+        xRemoteFile DownloadAzureADConnect {
+            Uri = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+            DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
+        }
         Script InstallAzureADConnect {            
             GetScript  = { @{} }
             SetScript  = 
             {
                 $MSIPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
-                Invoke-WebRequest -Uri "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi" -OutFile $MSIPath
                 Invoke-Expression "& $env:SystemRoot\system32\msiexec.exe /i $MSIPath /qn /passive /forcerestart"
             }
-
             TestScript = 
             {
                 return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
+            DependsOn = "[xRemoteFile]DownloadAzureADConnect"
+        }
+    }
+}
+
+configuration FS-DOWNLEVEL {
+    param
+    (
+        [Parameter(Mandatory)] 
+        [string]$domainName,
+        [Parameter(Mandatory)] 
+        [pscredential]$domainCred
+    )
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
+
+    Node 'localhost'
+    {
+        LocalConfigurationManager {
+            DebugMode          = 'All'
+            RebootNodeIfNeeded = $true
+        }
+        xPendingReboot Reboot1
+        {
+            # Make sure to refresh DNS Server address
+            Name = "RebootServer"        
+        }
+        xWaitForADDomain DscForestWait 
+        { 
+            DomainName = $DomainName 
+            DomainUserCredential= $domainCreds
+            RetryCount = $ConfigData.NonNodeData.RetryIntervalSec
+            RetryIntervalSec = $ConfigData.NonNodeData.RetryIntervalSec
+            DependsOn = "[xPendingReboot]Reboot1"
+        }
+        xComputer JoinDomain
+        {
+            Name          = $env:COMPUTERNAME 
+            DomainName    = $domainName 
+            Credential    = $domainCred  # Credential to join to domain
+            DependsOn = "[xWaitForADDomain]DscForestWait"
+        }
+        xPendingReboot Reboot2
+        { 
+            Name = "RebootServer"
+            DependsOn = "[xComputer]JoinDomain"
+        }
+        WindowsFeature installADFS  #install ADFS
+        {
+            Ensure = "Present"
+            Name   = "ADFS-Federation"
+            DependsOn = "[xPendingReboot]Reboot2"
+        }
+        <#
+        WindowsFeature RSAT-AD-AdminCenter {
+            Ensure = "Present"
+            Name   = "RSAT-AD-AdminCenter"
+        }
+        WindowsFeature RSAT-ADDS {
+            Ensure = "Present"
+            Name   = "RSAT-ADDS"
+        }
+        WindowsFeature RSAT-AD-PowerShell {
+            Ensure = "Present"
+            Name   = "RSAT-AD-PowerShell"
+        }
+        WindowsFeature RSAT-AD-Tools {
+            Ensure = "Present"
+            Name   = "RSAT-AD-Tools"
+        }
+       #>
+        foreach ($m in @($ConfigurationData.NonNodeData.PowerShellModules)) {
+            Script $m {
+                SetScript  = {
+                    Install-Module -Name $using:m -AllowClobber -Force
+                }
+
+                GetScript  = { @{} }
+                TestScript = { 
+                    $key = Get-Module -Name $using:m -ListAvailable
+                    return ($key -ine $null)
+                }
+            }
         }
 
+        Script DeployLinks {
+            SetScript  = {
+                $WshShell = New-Object -comObject WScript.Shell
+                $dt = "C:\Users\Public\Desktop\"
+                $links = @(
+                    @{site = "%windir%\system32\WindowsPowerShell\v1.0\PowerShell_ISE.exe"; name = "PowerShell ISE"; icon = "%SystemRoot%\system32\WindowsPowerShell\v1.0\powershell_ise.exe, 0"},
+                    @{site = "%windir%\system32\services.msc"; name = "Services"; icon = "%windir%\system32\filemgmt.dll, 0"}
+                )
+
+                foreach ($link in $links) {
+                    $Shortcut = $WshShell.CreateShortcut("$($dt)$($link.name).lnk")
+                    $Shortcut.TargetPath = $link.site
+                    $Shortcut.IconLocation = $link.icon
+                    $Shortcut.Save()
+                }
+            }
+            GetScript  = { @{} }
+            TestScript = {
+                $icons = Get-ChildItem -Path "C:\Users\Public\Desktop\"
+                $result = 0
+                foreach ($i in $icons) {
+                    if (($i.name).endswith('.lnk')) {
+                        $result++
+                    }
+                }
+                return ($result -gt 0)
+            }
+        }
+        xRemoteFile DownloadAzureADConnect {
+            Uri = "https://download.microsoft.com/download/B/0/0/B00291D0-5A83-4DE7-86F5-980BC00DE05A/AzureADConnect.msi"
+            DestinationPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
+        }
+        Script InstallAzureADConnect {            
+            GetScript  = { @{} }
+            SetScript  = 
+            {
+                $MSIPath = "C:\Users\Public\Downloads\AzureADConnect.msi"
+                Invoke-Expression "& $env:SystemRoot\system32\msiexec.exe /i $MSIPath /qn /passive /forcerestart"
+            }
+            TestScript = 
+            {
+                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
+            }
+            DependsOn = "[xRemoteFile]DownloadAzureADConnect"
+        }
     }
 }
 
@@ -319,6 +450,52 @@ Configuration WAP
             IncludeAllSubFeature = $true
         }
 
+        WindowsFeature MoreTools 
+        {
+            Ensure = "Present"
+            Name = "RSAT-AD-PowerShell"
+            IncludeAllSubFeature = $true
+        }
+
+        WindowsFeature Telnet
+        {
+            Ensure = "Present"
+            Name = "Telnet-Client"
+        }
+    }
+}
+
+Configuration WAP-DOWNLEVEL
+{
+    param
+    (
+    )
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration
+
+    Node localhost
+    {
+        LocalConfigurationManager            
+        {            
+            DebugMode = 'All'
+            ActionAfterReboot = 'ContinueConfiguration'            
+            ConfigurationMode = 'ApplyOnly'            
+            RebootNodeIfNeeded = $true
+        }
+        <#
+	    WindowsFeature WebAppProxy
+        {
+            Ensure = "Present"
+            Name = "Web-Application-Proxy"
+        }
+        
+        WindowsFeature Tools 
+        {
+            Ensure = "Present"
+            Name = "RSAT-RemoteAccess"
+            IncludeAllSubFeature = $true
+        }
+        #>
         WindowsFeature MoreTools 
         {
             Ensure = "Present"
