@@ -1,4 +1,22 @@
+# https://technet.microsoft.com/ja-jp/library/hh974719(v=wps.630).aspx
 # https://support.microsoft.com/en-us/help/947034/how-to-use-unattended-mode-to-install-and-remove-active-directory-doma
+
+# Creates a read-only domain controller (RODC) account that can be used to install an RODC in Active Directory.
+function Add-ADDSReadOnlyDomainControllerAccount {
+    param()
+}
+
+# Installs a new Active Directory domain configuration.
+function  Install-ADDSDomain {
+    param()
+    Write-Verbose "ADDSDeployment Downlevel Server Support Wrapper: Install-ADDSDomain is yet to be supported"
+}
+# Installs a domain controller in Active Directory.
+function Install-ADDSDomainController {
+    param()
+}
+
+# Installs a new Active Directory forest configuration.
 function  Install-ADDSForest {
     param
     (
@@ -78,6 +96,33 @@ function  Install-ADDSForest {
     "Promoting DC" >> $log
 
     & dcpromo /unattend:$unattendedFile
-
 }
+
+# Runs the prerequisites (only) for installing a domain controller in Active Directory.
+function Test-ADDSDomainControllerInstallation {
+    param()
+}
+# Runs the prerequisites (only) for uninstalling a domain controller in Active Directory.
+function Test-ADDSDomainControllerUninstallation {
+    param()
+}
+# Runs the prerequisites (only) for installing a new Active Directory domain configuration.
+function Test-ADDSDomainInstallation {
+    param()
+}
+
+# Runs the prerequisites (only) for installing a new forest in Active Directory.
+function Test-ADDSForestInstallation {
+    param()
+}
+# Runs the prerequisites (only) for adding a read-only domain controller (RODC) account.
+function Test-ADDSReadOnlyDomainControllerAccountCreation {
+    param()
+}
+# Uninstalls a domain controller in Active Directory.
+function Uninstall-ADDSDomainController {
+    param()
+}
+
 Export-ModuleMember Install-ADDSForest
+# Export-ModuleMember Install-ADDSDomain
