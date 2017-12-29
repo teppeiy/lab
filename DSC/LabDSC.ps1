@@ -19,7 +19,7 @@ configuration DC {
     {
         LocalConfigurationManager {
             DebugMode          = 'All'
-            RebootNodeIfNeeded = $false
+            RebootNodeIfNeeded = $true
         }
         WindowsFeature ADDSInstall { 
             Ensure = "Present" 
