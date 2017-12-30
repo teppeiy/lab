@@ -146,7 +146,7 @@ configuration DC {
             }
             TestScript = 
             {
-                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
+                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
             DependsOn  = "[xRemoteFile]DownloadAzureADConnect"
         }
@@ -257,7 +257,7 @@ configuration FS {
             }
             TestScript = 
             {
-                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
+                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
             DependsOn = "[xRemoteFile]DownloadAzureADConnect"
         }
@@ -393,7 +393,7 @@ configuration FS-DOWNLEVEL {
             }
             TestScript = 
             {
-                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
+                return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
             }
             DependsOn  = "[xRemoteFile]DownloadAzureADConnect"
         }
