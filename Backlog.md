@@ -10,7 +10,8 @@
 * Permanent 2008R2 farm
 
 ## 2008R2 farm
-* adfssetup.exe sometimes stops, manybe needs dependenty?
+* FIXED: adfssetup.exe sometimes stops, manybe needs dependenty?
+* Rollup needed to be installed - https://support.microsoft.com/en-us/help/2790338/description-of-update-rollup-3-for-active-directory-federation-service
 * Streamlined support for cert install, adfs setup
 
 ## 2012R2 farm

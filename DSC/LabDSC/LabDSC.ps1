@@ -273,7 +273,7 @@ configuration FS-DOWNLEVEL {
         [pscredential]$domainCred
     )
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
-    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
+    Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot,xWindowsUpdate
 
     Node 'localhost'
     {
@@ -338,6 +338,17 @@ configuration FS-DOWNLEVEL {
             }
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[xPendingReboot]Reboot3"
         }
+
+        xHotfix HotfixInstall
+        {
+            # https://support.microsoft.com/en-us/help/2790338/description-of-update-rollup-3-for-active-directory-federation-service
+            
+            Ensure = "Present"
+            Path = "http://hotfixv4.microsoft.com/Windows%207/Windows%20Server2008%20R2%20SP1/sp2/Fix421449/7600/free/456227_intl_x64_zip.exe"
+            Id = "KB2790338"
+            DependsOn = "[Script]InstallADFS"
+        }
+
         foreach ($m in @($ConfigurationData.NonNodeData.PowerShellModules)) {
             Script $m {
                 SetScript  = {
