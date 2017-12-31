@@ -313,7 +313,10 @@ configuration FS-DOWNLEVEL {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
         }
-    
+        xPendingReboot Reboot3 { 
+            Name      = "RebootServer"
+            DependsOn = "[WindowsFeature]NET-Framework-Core"
+        }
         xRemoteFile DownloadADFS {
             Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
             DestinationPath = "C:\Users\Public\Downloads\AdfsSetup.exe"
@@ -333,7 +336,7 @@ configuration FS-DOWNLEVEL {
                 #return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
                 return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
             }
-            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core"
+            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[xPendingReboot]Reboot3"
         }
         foreach ($m in @($ConfigurationData.NonNodeData.PowerShellModules)) {
             Script $m {
