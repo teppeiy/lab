@@ -338,7 +338,7 @@ configuration FS-DOWNLEVEL {
             }
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[xPendingReboot]Reboot3"
         }
-
+<#
         xHotfix HotfixInstall
         {
             # https://support.microsoft.com/en-us/help/2790338/description-of-update-rollup-3-for-active-directory-federation-service
@@ -348,7 +348,7 @@ configuration FS-DOWNLEVEL {
             Id = "KB2790338"
             DependsOn = "[Script]InstallADFS"
         }
-
+#>
         foreach ($m in @($ConfigurationData.NonNodeData.PowerShellModules)) {
             Script $m {
                 SetScript  = {
