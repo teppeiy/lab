@@ -1,0 +1,305 @@
+PS C:\repos\PowerShell> dpfst lab4
+Resource group 'lab4' does not exist. To create a new resource group, please enter a location.
+Creating ResourceGroup: lab4' in Location: Southeast Asia
+VERBOSE: Performing the operation "Replacing resource group ..." on target "".
+VERBOSE: 6:12:12 PM - Created resource group 'lab4' in location 'southeastasia'
+
+
+ResourceGroupName : lab4
+Location          : southeastasia
+ProvisioningState : Succeeded
+Tags              :
+ResourceId        : /subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/lab4
+
+VERBOSE: Performing the operation "Creating Deployment" on target "lab4".
+VERBOSE: 6:12:17 PM - Template is valid.
+VERBOSE: 6:12:20 PM - Create template deployment 'lab4.Deployment'
+VERBOSE: 6:12:20 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:27 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:32 PM - Resource Microsoft.Resources/deployments 'NSGs' provisioning status is running
+VERBOSE: 6:12:33 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:39 PM - Resource Microsoft.Network/networkSecurityGroups 'CorpNet-NSG' provisioning status is running
+VERBOSE: 6:12:39 PM - Resource Microsoft.Network/networkSecurityGroups 'Dmz-NSG' provisioning status is running
+VERBOSE: 6:12:39 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:45 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:51 PM - Resource Microsoft.Network/networkSecurityGroups 'CorpNet-NSG' provisioning status is succeeded
+VERBOSE: 6:12:51 PM - Resource Microsoft.Network/networkSecurityGroups 'Dmz-NSG' provisioning status is succeeded
+VERBOSE: 6:12:51 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:12:57 PM - Resource Microsoft.Resources/deployments 'NSGs' provisioning status is succeededrovisioning status is succeeded
+VERBOSE: 6:12:58 PM - Checking deployment status in 5 seconds          lt' provisioning status is running
+VERBOSE: 6:13:04 PM - Resource Microsoft.Network/virtualNetworks 'default' provisioning status is running                                     lt' provisioning status is succeeded
+VERBOSE: 6:13:04 PM - Checking deployment status in 8 seconds
+VERBOSE: 6:13:13 PM - Resource Microsoft.Network/virtualNetworks 'default' provisioning status is succeeded
+VERBOSE: 6:13:13 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:13:20 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:13:27 PM - Resource Microsoft.Resources/deployments 'DC' provisioning status is runningVERBOSE: 6:13:27 PM - Resource Microsoft.Storage/storageAccounts 'teppeiy' provisioning status is succeededVERBOSE: 6:13:27 PM - Resource Microsoft.Storage/storageAccounts 'teppeiy' provisioning status is succeededVERBOSE: 6:13:27 PM - Checking deployment status in 5 secondsVERBOSE: 6:13:34 PM - Resource Microsoft.Network/publicIpAddresses 'lab4-DC-pip' provisioning status is succeededVERBOSE: 6:13:34 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-DC-nsg' provisioning status is running
+VERBOSE: 6:13:34 PM - Checking deployment status in 5 secondsVERBOSE: 6:13:41 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-DC-nsg' provisioning status is succeededVERBOSE: 6:13:41 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:13:47 PM - Resource Microsoft.Network/networkInterfaces 'lab4-DC-nic' provisioning status is succeededVERBOSE: 6:13:48 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:13:54 PM - Resource Microsoft.Compute/virtualMachines 'lab4-DC' provisioning status is running
+VERBOSE: 6:13:55 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:01 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:08 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:15 PM - Checking deployment status in 5 secondsVERBOSE: 6:14:22 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:30 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:36 PM - Checking deployment status in 5 secondsVERBOSE: 6:14:44 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:51 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:14:58 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:05 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:13 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:21 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:31 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:39 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:48 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:15:56 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:08 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:17 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:25 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:32 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:39 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:47 PM - Resource Microsoft.Compute/virtualMachines 'lab4-DC' provisioning status is succeeded
+VERBOSE: 6:16:47 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:16:54 PM - Checking deployment status in 5 seconds
+$profilePath = "$env:USERPROFILE/Documents/WindowsPowerShell"
+$rootLocalPowershellPath = Join-Path $localRepoPath "Powershell/Profile/*.ps1"
+Copy-item -Path $rootLocalPowershellPath -Destination $profilePath -Recurse -Verbose -Force
+VERBOSE: 6:17:01 PM - Resource Microsoft.Resources/deployments 'DC' provisioning status is succeeded
+VERBOSE: 6:17:01 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:17:09 PM - Resource Microsoft.Compute/virtualMachines/extensions 'lab4-DC/Microsoft.Powershell.DSC' provisioning status is running
+VERBOSE: 6:17:09 PM - Resource Microsoft.Resources/deployments 'WAP' provisioning status is running
+VERBOSE: 6:17:09 PM - Resource Microsoft.Resources/deployments 'FS' provisioning status is running
+VERBOSE: 6:17:09 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:17:17 PM - Resource Microsoft.Network/publicIpAddresses 'lab4-WAP-pip' provisioning status is succeeded
+VERBOSE: 6:17:17 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-WAP-nsg' provisioning status is running
+VERBOSE: 6:17:17 PM - Resource Microsoft.Network/publicIpAddresses 'lab4-FS-pip' provisioning status is succeeded
+VERBOSE: 6:17:17 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-FS-nsg' provisioning status is running
+VERBOSE: 6:17:18 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:17:26 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-WAP-nsg' provisioning status is succeeded
+VERBOSE: 6:17:26 PM - Resource Microsoft.Network/networkSecurityGroups 'lab4-FS-nsg' provisioning status is succeeded
+VERBOSE: 6:17:26 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:17:37 PM - Resource Microsoft.Compute/virtualMachines 'lab4-WAP' provisioning status is running
+VERBOSE: 6:17:37 PM - Resource Microsoft.Network/networkInterfaces 'lab4-WAP-nic' provisioning status is succeeded
+VERBOSE: 6:17:37 PM - Resource Microsoft.Compute/virtualMachines 'lab4-FS' provisioning status is running
+VERBOSE: 6:17:37 PM - Resource Microsoft.Network/networkInterfaces 'lab4-FS-nic' provisioning status is succeeded
+VERBOSE: 6:17:38 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:17:50 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:01 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:14 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:22 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:31 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:39 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:49 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:18:57 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:07 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:16 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:28 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:38 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:48 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:19:58 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:06 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:14 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:22 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:31 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:39 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:46 PM - Resource Microsoft.Compute/virtualMachines 'lab4-WAP' provisioning status is succeeded
+VERBOSE: 6:20:46 PM - Resource Microsoft.Compute/virtualMachines 'lab4-FS' provisioning status is succeeded
+VERBOSE: 6:20:47 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:20:55 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:03 PM - Resource Microsoft.Compute/virtualMachines/extensions 'lab4-WAP/Microsoft.Powershell.DSC' provisioning status is running
+VERBOSE: 6:21:03 PM - Resource Microsoft.Resources/deployments 'WAP' provisioning status is succeeded
+VERBOSE: 6:21:03 PM - Resource Microsoft.Resources/deployments 'FS' provisioning status is succeeded
+VERBOSE: 6:21:03 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:12 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:21 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:29 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:38 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:46 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:21:54 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:02 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:10 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:19 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:27 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:36 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:44 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:22:52 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:01 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:12 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:21 PM - Checking deployment status in 5 seconds
+New-AzureRmResourceGroupDeployment : 6:23:29 PM - Resource Microsoft.Compute/virtualMachines/extensions 'lab4-DC/Microsoft.Powershell.DSC' failed with message '{
+  "status": "Failed",
+  "error": {
+    "code": "ResourceDeploymentFailure",
+    "message": "The resource operation completed with terminal provisioning state 'Failed'.",
+    "details": [
+      {
+        "code": "VMExtensionProvisioningError",
+        "message": "VM has reported a failure when processing extension 'Microsoft.Powershell.DSC'. Error message: \"The DSC Extension received an incorrect input: Compilation errors occurred
+while processing configuration 'DC'. Please review the errors reported in error stream and modify your configuration code appropriately. Windows PowerShell updated your execution policy
+successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your shell will retain its current effective execution policy of Bypass. Type
+\"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help Set-ExecutionPolicy\". Exception calling \"InvokeWithContext\" with \"2\"
+argument(s): \"Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your shell will
+retain its current effective execution policy of Bypass. Type \"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help
+Set-ExecutionPolicy\".\" Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your
+shell will retain its current effective execution policy of Bypass. Type \"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help
+Set-ExecutionPolicy\".\n\nAnother common error is to specify parameters of type PSCredential without an explicit type. Please be sure to use a typed parameter in DSC Configuration, for
+example:\n\n    configuration Example {\n        param([PSCredential] $UserAccount)\n        ...\n    }.\nPlease correct the input and retry executing the extension.\"."
+      }
+    ]
+  }
+}'
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+New-AzureRmResourceGroupDeployment : 6:23:29 PM - VM has reported a failure when processing extension 'Microsoft.Powershell.DSC'. Error message: "The DSC Extension received an incorrect input:
+Compilation errors occurred while processing configuration 'DC'. Please review the errors reported in error stream and modify your configuration code appropriately. Windows PowerShell updated
+your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your shell will retain its current effective execution
+policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information please see "Get-Help Set-ExecutionPolicy". Exception calling "InvokeWithContext"
+with "2" argument(s): "Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your
+shell will retain its current effective execution policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information please see "Get-Help
+Set-ExecutionPolicy"." Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your
+shell will retain its current effective execution policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information please see "Get-Help
+Set-ExecutionPolicy".
+
+Another common error is to specify parameters of type PSCredential without an explicit type. Please be sure to use a typed parameter in DSC Configuration, for example:
+
+    configuration Example {
+        param([PSCredential] $UserAccount)
+        ...
+    }.
+Please correct the input and retry executing the extension.".
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+VERBOSE: 6:23:29 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:38 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:48 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:23:57 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:05 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:14 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:25 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:35 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:49 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:24:59 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:07 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:17 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:26 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:35 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:43 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:51 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:25:59 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:09 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:17 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:26 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:34 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:42 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:26:50 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:27:01 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:27:12 PM - Checking deployment status in 5 seconds
+VERBOSE: 6:27:23 PM - Checking deployment status in 5 seconds
+New-AzureRmResourceGroupDeployment : 6:27:33 PM - Resource Microsoft.Compute/virtualMachines/extensions 'lab4-WAP/Microsoft.Powershell.DSC' failed with message '{
+  "status": "Failed",
+  "error": {
+    "code": "ResourceDeploymentFailure",
+    "message": "The resource operation completed with terminal provisioning state 'Failed'.",
+    "details": [
+      {
+        "code": "VMExtensionProvisioningError",
+        "message": "VM has reported a failure when processing extension 'Microsoft.Powershell.DSC'. Error message: \"The DSC Extension received an incorrect input: Compilation errors occurred while processing configuration 'WAP'.
+Please review the errors reported in error stream and modify your configuration code appropriately. Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific
+scope.  Due to the override, your shell will retain its current effective execution policy of Bypass. Type \"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help
+Set-ExecutionPolicy\". Exception calling \"InvokeWithContext\" with \"2\" argument(s): \"Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due
+to the override, your shell will retain its current effective execution policy of Bypass. Type \"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help Set-ExecutionPolicy\".\"
+Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your shell will retain its current effective execution policy of Bypass.
+Type \"Get-ExecutionPolicy -List\" to view your execution policy settings. For more information please see \"Get-Help Set-ExecutionPolicy\".\n\nAnother common error is to specify parameters of type PSCredential without an explicit
+type. Please be sure to use a typed parameter in DSC Configuration, for example:\n\n    configuration Example {\n        param([PSCredential] $UserAccount)\n        ...\n    }.\nPlease correct the input and retry executing the
+extension.\"."
+      }
+    ]
+  }
+}'
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+New-AzureRmResourceGroupDeployment : 6:27:33 PM - VM has reported a failure when processing extension 'Microsoft.Powershell.DSC'. Error message: "The DSC Extension received an incorrect input: Compilation errors occurred while
+processing configuration 'WAP'. Please review the errors reported in error stream and modify your configuration code appropriately. Windows PowerShell updated your execution policy successfully, but the setting is overridden by a
+policy defined at a more specific scope.  Due to the override, your shell will retain its current effective execution policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information
+please see "Get-Help Set-ExecutionPolicy". Exception calling "InvokeWithContext" with "2" argument(s): "Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more
+specific scope.  Due to the override, your shell will retain its current effective execution policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information please see "Get-Help
+Set-ExecutionPolicy"." Windows PowerShell updated your execution policy successfully, but the setting is overridden by a policy defined at a more specific scope.  Due to the override, your shell will retain its current effective
+execution policy of Bypass. Type "Get-ExecutionPolicy -List" to view your execution policy settings. For more information please see "Get-Help Set-ExecutionPolicy".
+
+Another common error is to specify parameters of type PSCredential without an explicit type. Please be sure to use a typed parameter in DSC Configuration, for example:
+
+    configuration Example {
+        param([PSCredential] $UserAccount)
+        ...
+    }.
+Please correct the input and retry executing the extension.".
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+New-AzureRmResourceGroupDeployment : 6:27:33 PM - Template output evaluation skipped: at least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-debug for usage
+details.
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+New-AzureRmResourceGroupDeployment : 6:27:33 PM - Template output evaluation skipped: at least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-debug for usage
+details.
+At C:\repos\PowerShell\Modules\LabArmUtils.psm1:1091 char:5
++     New-AzureRmResourceGroupDeployment -Name $deploymentName -Resourc ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [New-AzureRmResourceGroupDeployment], Exception
+    + FullyQualifiedErrorId : Microsoft.Azure.Commands.ResourceManager.Cmdlets.Implementation.NewAzureResourceGroupDeploymentCmdlet
+
+
+DeploymentName          : lab4.Deployment
+CorrelationId           : 78a536cf-7530-4f43-866d-0746f83565ea
+ResourceGroupName       : lab4
+ProvisioningState       : Failed
+Timestamp               : 7/24/2018 9:27:27 AM
+Mode                    : Incremental
+TemplateLink            :
+TemplateLinkString      :
+DeploymentDebugLogLevel :
+Parameters              : {[_artifactsLocation, Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.DeploymentVariable], [dcIpAddress, Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.DeploymentVariable], [domainName,
+                          Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.DeploymentVariable], [location, Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels.DeploymentVariable]...}
+ParametersString        :
+                          Name             Type                       Value
+                          ===============  =========================  ==========
+                          _artifactsLocation  String                     https://raw.githubusercontent.com/teppeiy/lab/master/
+                          dcIpAddress      String                     10.0.0.4
+                          domainName       String                     teppeiy.local
+                          location         String                     southeastasia
+                          virtualMachineName  String                     lab4
+                          virtualMachineSize  String                     Standard_D2s_v3
+                          adminUsername    String                     teppeiy
+                          virtualNetworkName  String                     default
+                          adminPassword    SecureString
+                          diagnosticsStorageAccountName  String                     teppeiy
+                          diagnosticsStorageAccountId  String                     /subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/utilities/providers/Microsoft.Storage/storageAccounts/teppeiy
+                          addressPrefix    String                     10.0.0.0/16
+                          subnetName       String                     CorpNet
+                          subnetPrefix     String                     10.0.0.0/24
+                          dmzSubnetName    String                     Dmz
+                          dmzSubnetPrefix  String                     10.0.1.0/24
+                          publicIpAddressType  String                     Dynamic
+                          publicIpAddressSku  String                     Basic
+                          imageSku         String                     2012-R2-Datacenter
+                          enableDiagnostics  String                     !False
+
+Outputs                 :
+OutputsString           :
