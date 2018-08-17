@@ -85,7 +85,7 @@
         "nsgTemplateURI": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/nsg.json')]",
         "domainAdminUsername": "[concat(parameters('domainName'),'\\',parameters('adminUsername'))]",
         "customScriptCommand": "powershell.exe hostname",
-        "customScriptCommandForDownlevel": "powershell.exe -ExecutionPolicy Unrestricted Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine",
+        "customScriptCommandForDownlevel": "powershell.exe Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine",
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
         "dscExtensionScript": "LabDSC.ps1",
