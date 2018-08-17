@@ -84,8 +84,6 @@
     "variables": {
         "nsgTemplateURI": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/nsg.json')]",
         "domainAdminUsername": "[concat(parameters('domainName'),'\\',parameters('adminUsername'))]",
-        "customScriptUrl": "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/SetPowershellExecutionPolicy.ps1",
-        "customScriptCommand2": "powershell.exe -ExecutionPolicy Unrestricted -file SetPowershellExecutionPolicy.ps1",
         "customScriptCommand": "powershell.exe -ExecutionPolicy Unrestricted Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine",
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
@@ -96,7 +94,6 @@
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
         "dcStorageAccountType": "[parameters('storageAccountType')]",
-        "dcCustomScriptUrl":"[variables('customScriptUrl')]",
         "dcCustomScriptCommand":"[variables('customScriptCommand')]",
         "dcDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "dcDscExtensionScript": "[variables('dscExtensionScript')]",
@@ -270,9 +267,6 @@
                 "typeHandlerVersion": "1.9",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "fileUris": [
-                        "[variables('dcCustomScriptUrl')]"
-                    ],
                     "commandToExecute": "[variables('dcCustomScriptCommand')]"
                 }                
             }
