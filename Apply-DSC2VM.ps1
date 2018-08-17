@@ -1,7 +1,7 @@
-Publish-AzureRmVMDscConfiguration -ConfigurationPath ".\DSC\LabDSC\LabDSC.ps1" -ConfigurationDataPath ".\DSC\LabDSC\LabDSC.psd1" -ResourceGroupName "Utilities" -StorageAccountName "teppeiy" -Force
+Publish-AzureRmVMDscConfiguration -ConfigurationPath ".\LabDSC\LabDSC.ps1" -ConfigurationDataPath ".\LabDSC\LabDSC.psd1" -ResourceGroupName "Utilities" -StorageAccountName "teppeiy" -Force
 
-$ResourceGroupName = "lab9"
-$VmName = "lab9-dc"
+$ResourceGroupName = "lab3"
+$VmName = "lab3-dc"
 
 $cred = Get-Credential
 $configurationArguments = @{
