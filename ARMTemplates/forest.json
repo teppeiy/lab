@@ -104,6 +104,7 @@
         "fsVmName": "[concat(parameters('virtualMachineName'), '-FS')]",
         "fsImageSku": "[parameters('imageSku')]",
         "fsStorageAccountType": "[parameters('storageAccountType')]",
+        "fsCustomScriptCommand":"[if(equals(variables('fsImageSku'), '2008-R2-SP1'), variables('customScriptCommandForDownlevel'), variables('customScriptCommand'))]",
         "fsDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "fsDscExtensionScript": "[variables('dscExtensionScript')]",
         "fsDscExtensionFunction": "[if(equals(variables('fsImageSku'), '2008-R2-SP1'), 'FS-DOWNLEVEL', 'FS')]",                
@@ -112,6 +113,7 @@
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
         "wapStorageAccountType": "[parameters('storageAccountType')]",
+        "wapCustomScriptCommand":"[if(equals(variables('wapImageSku'), '2008-R2-SP1'), variables('customScriptCommandForDownlevel'), variables('customScriptCommand'))]",
         "wapDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "wapDscExtensionScript": "[variables('dscExtensionScript')]",
         "wapDscExtensionFunction": "[if(equals(variables('wapImageSku'), '2008-R2-SP1'), 'WAP-DOWNLEVEL', 'WAP')]",  
@@ -420,13 +422,35 @@
             }
         },
         {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('fsVmName'),'/CustomScript')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/FS"
+            ],
+            "tags": {
+                "displayName": "CustomScript"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "commandToExecute": "[variables('fsCustomScriptCommand')]"
+                }                
+            }
+        },
+        {
             "name": "[concat(variables('fsVmName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
                 "Microsoft.Resources/Deployments/FS",
-                "virtualNetworkDNSUpdate"
+                "virtualNetworkDNSUpdate",
+                "[concat('Microsoft.Compute/virtualMachines/', variables('fsVmName'),'/extensions/CustomScript')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
@@ -523,12 +547,34 @@
             }
         },
         {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('wapVmName'),'/CustomScript')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/WAP"
+            ],
+            "tags": {
+                "displayName": "CustomScript"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "commandToExecute": "[variables('wapCustomScriptCommand')]"
+                }                
+            }
+        },
+        {
             "name": "[concat(variables('wapVmName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "Microsoft.Resources/Deployments/WAP"
+                "Microsoft.Resources/Deployments/WAP",
+                "[concat('Microsoft.Compute/virtualMachines/', variables('wapVmName'),'/extensions/CustomScript')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
