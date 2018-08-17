@@ -269,7 +269,7 @@
                         "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/SetPowershellExecutionPolicy.ps1"
                     ]
                 },
-                "commandToExecute": "powershell.exe -file SetPowershellExecutionPolicy.ps1'"
+                "commandToExecute": "powershell.exe -file SetPowershellExecutionPolicy.ps1"
             }
         },
         {
