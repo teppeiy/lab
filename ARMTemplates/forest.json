@@ -267,9 +267,9 @@
                 "settings": {
                     "fileUris": [
                         "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/SetPowershellExecutionPolicy.ps1"
-                    ]
-                },
-                "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -file SetPowershellExecutionPolicy.ps1"
+                    ],
+                    "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -file SetPowershellExecutionPolicy.ps1"
+                }                
             }
         },
         {
