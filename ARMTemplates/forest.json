@@ -249,12 +249,37 @@
             }
         },
         {
+            "apiVersion": "2015-06-15",
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('dcVmName'),'/CustomScript')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "Microsoft.Resources/Deployments/DC"
+            ],
+            "tags": {
+                "displayName": "CustomScript"
+            },
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.9",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "https://raw.githubusercontent.com/teppeiy/lab/master/DSC/SetPowershellExecutionPolicy.ps1"
+                    ]
+                },
+                "commandToExecute": "powershell.exe -file SetPowershellExecutionPolicy.ps1'"
+            }
+        },
+        {
             "name": "[concat(variables('dcVmName'),'/Microsoft.Powershell.DSC')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "Microsoft.Resources/Deployments/DC"
+                "Microsoft.Resources/Deployments/DC",
+                "[concat(variables('dcVmName'),'/CustomScript')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
