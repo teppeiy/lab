@@ -68,6 +68,14 @@
             ],
             "defaultValue": "2012-R2-Datacenter"
         },
+        "storageAccountType":{
+            "type": "string",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS"
+            ],
+            "defaultValue": "Standard_LRS"
+        },
         "enableDiagnostics": {
             "type": "string",
             "defaultValue": "true"
@@ -84,6 +92,7 @@
         "dcTemplateUri": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/base_vm.json')]",
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
+        "dcStorageAccountType": "[parameters('storageAccountType')]",
         "dcDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "dcDscExtensionScript": "[variables('dscExtensionScript')]",
         "dcDscExtensionFunction": "DC",
@@ -91,6 +100,7 @@
         "fsTemplateUri": "[variables('dcTemplateUri')]",
         "fsVmName": "[concat(parameters('virtualMachineName'), '-FS')]",
         "fsImageSku": "[parameters('imageSku')]",
+        "fsStorageAccountType": "[parameters('storageAccountType')]",
         "fsDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "fsDscExtensionScript": "[variables('dscExtensionScript')]",
         "fsDscExtensionFunction": "[if(equals(variables('fsImageSku'), '2008-R2-SP1'), 'FS-DOWNLEVEL', 'FS')]",                
@@ -98,6 +108,7 @@
         "wapTemplateUri": "[variables('dcTemplateUri')]",
         "wapVmName": "[concat(parameters('virtualMachineName'), '-WAP')]",
         "wapImageSku": "[parameters('imageSku')]",
+        "wapStorageAccountType": "[parameters('storageAccountType')]",
         "wapDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "wapDscExtensionScript": "[variables('dscExtensionScript')]",
         "wapDscExtensionFunction": "[if(equals(variables('wapImageSku'), '2008-R2-SP1'), 'WAP-DOWNLEVEL', 'WAP')]",  
@@ -221,6 +232,9 @@
                     },
                     "imageSku": {
                         "value": "[variables('dcImageSku')]"
+                    },
+                    "storageAccountType": {
+                        "value": "[variables('dcStorageAccountType')]"
                     },
                     "privateIPAllocationMethod":{
                         "value": "Static"
@@ -371,6 +385,9 @@
                     "imageSku": {
                         "value": "[variables('fsImageSku')]"
                     },
+                    "storageAccountType": {
+                        "value": "[variables('fsStorageAccountType')]"
+                    },
                     "enableDiagnostics": {
                         "value": "[parameters('enableDiagnostics')]"
                     }
@@ -470,6 +487,9 @@
                     },
                     "imageSku": {
                         "value": "[variables('wapImageSku')]"
+                    },
+                    "storageAccountType": {
+                        "value": "[variables('wapStorageAccountType')]"
                     },
                     "enableDiagnostics": {
                         "value": "[parameters('enableDiagnostics')]"

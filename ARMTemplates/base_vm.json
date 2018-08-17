@@ -57,6 +57,14 @@
             ],
             "defaultValue": "2012-R2-Datacenter"
         },
+        "storageAccountType":{
+            "type": "string",
+            "allowedValues": [
+                "Standard_LRS",
+                "Premium_LRS"
+            ],
+            "defaultValue": "Standard_LRS"
+        },
         "privateIPAllocationMethod":{
             "type": "string",
             "allowedValues": ["Dynamic", "Static"],
@@ -110,7 +118,7 @@
                     "osDisk": {
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "Premium_LRS"
+                            "storageAccountType": "[parameters('storageAccountType')]"
                         }
                     },
                     "dataDisks": []

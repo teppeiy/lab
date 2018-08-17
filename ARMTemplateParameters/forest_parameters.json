@@ -57,6 +57,12 @@
         },
         "publicIpAddressSku": {
             "value": "Basic"
+        },
+        "imageSku": {
+            "value": "2012-R2-Datacenter"
+        },
+        "storageAccountType": {
+            "value": "Standard_LRS"
         }
     }
 }
