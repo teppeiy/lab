@@ -160,7 +160,7 @@ configuration FS {
         [Parameter(Mandatory)] 
         [pscredential]$domainCred
     )
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot
 
     Node 'localhost'
@@ -272,7 +272,7 @@ configuration FS-DOWNLEVEL {
         [Parameter(Mandatory)] 
         [pscredential]$domainCred
     )
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory, xComputerManagement, xPendingReboot,xWindowsUpdate
 
     Node 'localhost'
@@ -423,7 +423,7 @@ Configuration WAP
     param
     (
     )
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module PSDesiredStateConfiguration
 
     Node localhost
@@ -457,7 +457,7 @@ Configuration WAP-DOWNLEVEL
     param
     (
     )
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration
 
     Node localhost
