@@ -84,7 +84,8 @@
     "variables": {
         "nsgTemplateURI": "[concat(parameters('_artifactsLocation'), 'ARMTemplates/nsg.json')]",
         "domainAdminUsername": "[concat(parameters('domainName'),'\\',parameters('adminUsername'))]",
-        "customScriptCommand": "powershell.exe -ExecutionPolicy Unrestricted Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine",
+        "customScriptCommand": "powershell.exe hostname",
+        "customScriptCommandForDownlevel": "powershell.exe -ExecutionPolicy Unrestricted Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine",
         "dscExtensionArchiveFolder": "DSC",
         "dscExtensionArchiveFileName": "LabDSC.ps1.zip",
         "dscExtensionScript": "LabDSC.ps1",
@@ -94,7 +95,7 @@
         "dcVmName": "[concat(parameters('virtualMachineName'), '-DC')]",
         "dcImageSku": "[parameters('imageSku')]",
         "dcStorageAccountType": "[parameters('storageAccountType')]",
-        "dcCustomScriptCommand":"[variables('customScriptCommand')]",
+        "dcCustomScriptCommand":"if(equals(variables('dcImageSku'), '2008-R2-SP1'), variables('customScriptCommandForDownlevel'), variables('customScriptCommand'))]",
         "dcDscExtensionUrl":"[concat(parameters('_artifactsLocation'), variables('dscExtensionArchiveFolder'), '/', variables('dscExtensionArchiveFileName'))]",
         "dcDscExtensionScript": "[variables('dscExtensionScript')]",
         "dcDscExtensionFunction": "DC",
