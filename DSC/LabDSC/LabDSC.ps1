@@ -12,7 +12,7 @@ configuration DC {
         [Parameter(Mandatory)]
         [pscredential]$NewADUserCred 
     )
-    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
+    #Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
     Import-DscResource -Module PSDesiredStateConfiguration, xPSDesiredStateConfiguration, xActiveDirectory
 
     Node $AllNodes.Where{$_.Role -eq "DC"}.Nodename 
