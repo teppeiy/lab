@@ -309,6 +309,8 @@ configuration FS-DOWNLEVEL {
             Ensure = 'Present'
         } 
        #>
+
+       <#
         WindowsFeature NET-Framework-Core {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
@@ -321,6 +323,7 @@ configuration FS-DOWNLEVEL {
             Name      = "RebootServer"
             DependsOn = "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS"
         }
+        #>
         xRemoteFile DownloadADFS {
             Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
             DestinationPath = "C:\Users\Public\Downloads\AdfsSetup.exe"
@@ -345,7 +348,8 @@ configuration FS-DOWNLEVEL {
                 }
                 return $false
             }
-            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS", "[xPendingReboot]Reboot3"
+            #DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS", "[xPendingReboot]Reboot3"
+            DependsOn  = "[xRemoteFile]DownloadADFS"
         }
 <#
         xHotfix HotfixInstall
