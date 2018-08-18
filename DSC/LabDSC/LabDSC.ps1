@@ -279,7 +279,7 @@ configuration FS-DOWNLEVEL {
     {
         LocalConfigurationManager {
             DebugMode          = 'All'
-            RebootNodeIfNeeded = $true
+            RebootNodeIfNeeded = $false
         }
         xPendingReboot Reboot1 {
             # Make sure to refresh DNS Server address
