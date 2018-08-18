@@ -349,7 +349,7 @@ configuration FS-DOWNLEVEL {
                 return $false
             }
             #DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS", "[xPendingReboot]Reboot3"
-            DependsOn  = "[xRemoteFile]DownloadADFS"
+            DependsOn  = "[xRemoteFile]DownloadADFS", "[xPendingReboot]Reboot2"
         }
 <#
         xHotfix HotfixInstall
