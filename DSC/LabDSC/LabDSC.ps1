@@ -343,9 +343,7 @@ configuration FS-DOWNLEVEL {
                 if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
                     return $true
                 }
-                else {
-                    return $false
-                }
+                return $false
             }
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS", "[xPendingReboot]Reboot3"
         }
@@ -509,7 +507,12 @@ Configuration WAP-DOWNLEVEL
             TestScript = 
             {
                 #return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
-                return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
+                #return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
+                $serviceName = "adfssrv"
+                if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
+                    return $true
+                }
+                return $false
             }
             DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core"
         }
