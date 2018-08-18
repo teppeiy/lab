@@ -313,9 +313,13 @@ configuration FS-DOWNLEVEL {
             Ensure = "Present"
             Name   = "NET-Framework-Core"
         }
+        WindowsFeature InstallIIS {
+            Name = "Web-Server"
+            Ensure = "Present"
+        }
         xPendingReboot Reboot3 { 
             Name      = "RebootServer"
-            DependsOn = "[WindowsFeature]NET-Framework-Core"
+            DependsOn = "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS"
         }
         xRemoteFile DownloadADFS {
             Uri             = "https://download.microsoft.com/download/F/3/D/F3D66A7E-C974-4A60-B7A5-382A61EB7BC6/RTW/W2K8R2/amd64/AdfsSetup.exe"
@@ -334,9 +338,16 @@ configuration FS-DOWNLEVEL {
             TestScript = 
             {
                 #return ((Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | where {$_.DisplayName -eq 'Microsoft Azure AD Connect'}) -ine $null)
-                return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
+                #return Test-path "C:\Program Files\Active Directory Federation Services 2.0"
+                $serviceName = "adfssrv"
+                if (Get-Service $serviceName -ErrorAction SilentlyContinue) {
+                    return $true
+                }
+                else {
+                    return $false
+                }
             }
-            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[xPendingReboot]Reboot3"
+            DependsOn  = "[xRemoteFile]DownloadADFS", "[WindowsFeature]NET-Framework-Core", "[WindowsFeature]InstallIIS", "[xPendingReboot]Reboot3"
         }
 <#
         xHotfix HotfixInstall

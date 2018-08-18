@@ -14,7 +14,7 @@ $configurationArguments = @{
 Set-AzureRmVMDscExtension -ResourceGroupName $ResourceGroupName -VMName $VmName -ArchiveBlobName "LabDSC.ps1.zip" -ConfigurationArgument $configurationArguments -ArchiveResourceGroupName "Utilities" -ArchiveStorageAccountName "teppeiy" -ConfigurationName "DC" -Version "2.76"
 
 #################################################
-# FS
+# FS-DOWNLEVEL
 #################################################
 $ResourceGroupName = "lab5"
 $VmName = "lab5-fs"
@@ -25,5 +25,5 @@ $configurationArguments = @{
     domainCred = $cred
 }
 
-Set-AzureRmVMDscExtension -ResourceGroupName $ResourceGroupName -VMName $VmName -ArchiveBlobName "LabDSC.ps1.zip" -ConfigurationArgument $configurationArguments -ArchiveResourceGroupName "Utilities" -ArchiveStorageAccountName "teppeiy" -ConfigurationName "FS" -Version "2.76"
+Set-AzureRmVMDscExtension -ResourceGroupName $ResourceGroupName -VMName $VmName -ConfigurationName "FS-DOWNLEVEL" -ArchiveBlobName "LabDSC.ps1.zip" -ConfigurationArgument $configurationArguments -ArchiveResourceGroupName "Utilities" -ArchiveStorageAccountName "teppeiy" -Version "2.76"
 
