@@ -170,7 +170,6 @@ configuration FS {
             RebootNodeIfNeeded = $true
         }
         xPendingReboot Reboot1 {
-            # Make sure to refresh DNS Server address
             Name = "RebootServer"        
         }
         xWaitForADDomain DscForestWait { 
@@ -477,8 +476,7 @@ Configuration WAP-DOWNLEVEL
     {
         LocalConfigurationManager {            
             DebugMode          = 'All'
-            ActionAfterReboot  = 'ContinueConfiguration'            
-            ConfigurationMode  = 'ApplyOnly'            
+            ConfigurationMode  = 'ApplyAndAutoCorrect'          
             RebootNodeIfNeeded = $true
         }
         WindowsFeature MoreTools {
