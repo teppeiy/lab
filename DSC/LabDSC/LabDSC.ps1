@@ -280,9 +280,9 @@ configuration FS-DOWNLEVEL {
         LocalConfigurationManager {
             DebugMode          = 'All'
             RebootNodeIfNeeded = $true
+            ConfigurationMode  = 'ApplyAndAutoCorrect'
         }
         xPendingReboot Reboot1 {
-            # Make sure to refresh DNS Server address
             Name = "RebootServer1"        
         }
         xWaitForADDomain DscForestWait { 
