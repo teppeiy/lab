@@ -279,11 +279,11 @@ configuration FS-DOWNLEVEL {
     {
         LocalConfigurationManager {
             DebugMode          = 'All'
-            RebootNodeIfNeeded = $false
+            RebootNodeIfNeeded = $true
         }
         xPendingReboot Reboot1 {
             # Make sure to refresh DNS Server address
-            Name = "RebootServer"        
+            Name = "RebootServer1"        
         }
         xWaitForADDomain DscForestWait { 
             DomainName           = $DomainName 
@@ -299,7 +299,7 @@ configuration FS-DOWNLEVEL {
             DependsOn  = "[xWaitForADDomain]DscForestWait"
         }
         xPendingReboot Reboot2 { 
-            Name      = "RebootServer"
+            Name      = "RebootServer2"
             DependsOn = "[xComputer]JoinDomain"
         }
         <#
