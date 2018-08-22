@@ -38,32 +38,60 @@ function BindCertToWebSite {
     $binding.AddSslCertificate($Certificate.GetCertHashString(), "MY")
 }
 
-$CertPath = GetOnlyOnePfxCert
-if($CertPath -eq $null){ return }
-Write-host "Using $CertPath"
-
-if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
-$cert = Import-PfxCertificate -Password $pfxPass -CertStoreLocation "cert:\localmachine\my" -FilePath $CertPath
-
-if($cert -ne $null){
-BindCertToWebSite -Certificate $cert
+function AddStsDnsToHostsFile {
+    param(
+        [string]$IpAddress,
+        [string]$HostName
+    )
+    $file = "$env:windir\System32\drivers\etc\hosts"
+    "$IpAddress`t$HostName" | Add-Content -PassThru $file
 }
 
-# Add sts DNS on DC
+$mode = Read-Host "Enter 0 for configuring ADFS, other for WAP:"
+Write-host "Make sure you have only one SSL cert (*.pfx) on your desktop"
 
-# Create adfs_svc account to DC
 
-# Install Cert to ADFS
+if ($mode -eq '0') {
+    $CertPath = GetOnlyOnePfxCert
+    if ($CertPath -eq $null) { return }
+    Write-host "Using $CertPath"
 
-# Bind Cert with IIS on ADFS
+    if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
+    $cert = Import-PfxCertificate -Password $pfxPass -CertStoreLocation "cert:\localmachine\my" -FilePath $CertPath
 
-# Run adfsconfig on ADFS
+    if ($cert -ne $null) {
+        BindCertToWebSite -Certificate $cert
+    }
 
-# Install Cert to WAP
+    # Add sts DNS on DC
 
-# Bind Cert with IIS on WAP
+    # Create adfs_svc account to DC
 
-# Add ADFS to HOSTS
-# notepad $env:systemroot\System32\drivers\etc\hosts
+    # Install Cert to ADFS
 
-# Run FspConfigWizard on WAP
+    # Bind Cert with IIS on ADFS
+
+    # Run adfsconfig on ADFS
+}
+else {
+    # Install Cert to WAP
+    $CertPath = GetOnlyOnePfxCert
+    if ($CertPath -eq $null) { return }
+    Write-host "Using $CertPath"
+
+    if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
+    $cert = Import-PfxCertificate -Password $pfxPass -CertStoreLocation "cert:\localmachine\my" -FilePath $CertPath
+
+    # Bind Cert with IIS on WAP
+    if ($cert -ne $null) {
+        BindCertToWebSite -Certificate $cert
+    }
+
+    # Add ADFS to HOSTS
+    $IpAddress = "10.0.0.5"
+    $StsHostName = "sts.teppeiy.local"
+    AddStsDnsToHostsFile -IpAddress $IpAddress -HostName $StsHostName
+
+    # Run FspConfigWizard on WAP
+
+}
