@@ -31,7 +31,7 @@
     },
     "managedDiskUri": {
       "type": "string",
-      "defaultValue": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10",
+      "defaultValue": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1803",
       "allowedValues": [
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1607",
