@@ -52,10 +52,15 @@ Write-host "Make sure you have only one SSL cert (*.pfx) on your desktop"
 
 
 if ($mode -eq '0') {
+    Write-Host "Configuring ADFS"
+
     # Install Cert to ADFS
 
     $CertPath = GetOnlyOnePfxCert
-    if ($CertPath -eq $null) { return }
+    if ($CertPath -eq $null) {
+        Write-host "Cert not found"
+        return 
+    }
     Write-host "Using $CertPath"
 
     if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
@@ -69,15 +74,29 @@ if ($mode -eq '0') {
     # Add sts DNS on DC
     Read-Host "Did you add DNS record for internal access in DNS?"
     # Create adfs_svc account to DC
-    Read-Host "Did you add ADFS service account in domain?"
+    Read-Host "Did you add ADFS service account in domain (only needed for farm mode)?"
 
     # Run adfsconfig on ADFS
-    Write-host "Please run ADFSConfigWizard"
+    Write-host "Run ADFSConfigWizard"
+    #start-process powershell -verb runAs "%ProgramFiles%\Active Directory Federation Services 2.0\FspConfigWizard.exe"
+
+    Write-host "Check sts is publicly resolvable"
+    Write-Host ""
+    Write-Host "Setup federation"
+    Write-host "`$cred = Get-Credential"
+    Write-host "Connect-MsolService -Credential '$cred"
+    Write-host "Convert-MsolDomainToFederated -DomainName teppeiy1.com"
+
 }
 else {
+    Write-Host "Configuring WAP"
+    
     # Install Cert to WAP
     $CertPath = GetOnlyOnePfxCert
-    if ($CertPath -eq $null) { return }
+    if ($CertPath -eq $null) {
+        Write-host "Cert not found"
+        return 
+    }
     Write-host "Using $CertPath"
 
     if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
@@ -90,9 +109,11 @@ else {
 
     # Add ADFS to HOSTS
     $IpAddress = "10.0.0.5"
-    $StsHostName = "sts.teppeiy.local"
+    $StsHostName = read-host "Enter STS's FQDN"
     AddStsDnsToHostsFile -IpAddress $IpAddress -HostName $StsHostName
+    #start-process powershell -verb runAs $cmd -Verbose -Debug
 
     # Run FspConfigWizard on WAP
-    Write-host "Please run ADFSConfigWizard"
+    Write-host "Run ADFSConfigWizard"
+    #start-process powershell -verb runAs "%ProgramFiles%\Active Directory Federation Services 2.0\FspConfigWizard.exe"
 }
