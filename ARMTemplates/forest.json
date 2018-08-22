@@ -555,7 +555,6 @@
                 "Microsoft.Resources/Deployments/WAP"
             ],
             "properties": {
-                "mode": "Incremental",
                 "securityRules": [{
                     "name": "https",
                     "properties": {
