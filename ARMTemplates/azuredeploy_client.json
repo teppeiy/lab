@@ -31,7 +31,7 @@
     },
     "managedDiskUri": {
       "type": "string",
-      "defaultValue": "/Subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/Providers/Microsoft.Compute/Locations/southeastasia/Publishers/MicrosoftVisualStudio/ArtifactTypes/VMImage/Offers/Windows/Skus/Windows-10-N-x64/Versions/2018.03.14",
+      "defaultValue": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1803",
       "allowedValues": [
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1607",
@@ -39,8 +39,8 @@
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1709",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1803",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win81",
-        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win7",
-        "/Subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/Providers/Microsoft.Compute/Locations/southeastasia/Publishers/MicrosoftVisualStudio/ArtifactTypes/VMImage/Offers/Windows/Skus/Windows-10-N-x64/Versions/2018.03.14"      ],
+        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win7"
+      ],
       "metadata": {
         "description": "ResourceID of Managed Disk"
       }
