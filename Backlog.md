@@ -1,14 +1,20 @@
 # Backlog
 
 ## Both
-* WAP NSG doesn't open HTTP/S
+* FIXED - WAP NSG doesn't open HTTP/S
 * ADFS ip needs to be static?
 * DNS zone creation automation on DC
+    * Need to create [local domain] zone for sts record for intranet
 * Public DNS record creation automation for WAP, maybe ATM?
 * Cert and tenant quick setup
-
-* Permanent 2008R2 farm
-
+* Client
+    * AutoDJ for dpvm doesn't work for Win7
+    * Oracle CredSSP problem persists for Win10, thus cannot RDP in
+    * ARM auto setup
+    * GPO to enable domain users for RDS
+    * GPO to set zone
+    * 
+ 
 ## 2008R2 farm
 * FIXED: adfssetup.exe sometimes stops, manybe needs dependenty? ConfigurationMode  = 'ApplyAndAutoCorrect' on LCM fixed the issue
 * Rollup needed to be installed - https://support.microsoft.com/en-us/help/2790338/description-of-update-rollup-3-for-active-directory-federation-service

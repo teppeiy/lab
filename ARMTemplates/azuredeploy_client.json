@@ -34,6 +34,10 @@
       "defaultValue": "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10",
       "allowedValues": [
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10",
+        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1607",
+        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1703",
+        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1709",
+        "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win10-1803",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win81",
         "/subscriptions/9b559a7e-7309-450c-b043-1bbf99fa8ebe/resourceGroups/Utilities/providers/Microsoft.Compute/images/Win7"
       ],
