@@ -52,6 +52,8 @@ Write-host "Make sure you have only one SSL cert (*.pfx) on your desktop"
 
 
 if ($mode -eq '0') {
+    # Install Cert to ADFS
+
     $CertPath = GetOnlyOnePfxCert
     if ($CertPath -eq $null) { return }
     Write-host "Using $CertPath"
@@ -59,19 +61,18 @@ if ($mode -eq '0') {
     if ($pfxPass -eq $null) {$pfxPass = read-host “Enter the pfx password” -assecurestring}
     $cert = Import-PfxCertificate -Password $pfxPass -CertStoreLocation "cert:\localmachine\my" -FilePath $CertPath
 
+    # Bind Cert with IIS on ADFS
     if ($cert -ne $null) {
         BindCertToWebSite -Certificate $cert
     }
 
     # Add sts DNS on DC
-
+    Read-Host "Did you add DNS record for internal access in DNS?"
     # Create adfs_svc account to DC
-
-    # Install Cert to ADFS
-
-    # Bind Cert with IIS on ADFS
+    Read-Host "Did you add ADFS service account in domain?"
 
     # Run adfsconfig on ADFS
+    Write-host "Please run ADFSConfigWizard"
 }
 else {
     # Install Cert to WAP
@@ -93,5 +94,5 @@ else {
     AddStsDnsToHostsFile -IpAddress $IpAddress -HostName $StsHostName
 
     # Run FspConfigWizard on WAP
-
+    Write-host "Please run ADFSConfigWizard"
 }
