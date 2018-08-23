@@ -47,7 +47,7 @@
     },
     "storageAccountType": {
       "type": "string",
-      "defaultValue": "Premium_LRS",
+      "defaultValue": "Standard_LRS",
       "allowedValues": [
         "Premium_LRS",
         "Standard_LRS"
@@ -68,12 +68,17 @@
       "metadata": {
         "description": "The password for the administrator account of the new VM and the domain"
       }
+    },
+    "postProvisioningScript": {
+      "type": "securestring",
+      "defaultValue": "net localgroup 'Remote Desktop Users' /add 'Authenticated Users'",
+      "metadata": {
+        "description": "Script that runs after provisioning"
+      }
     }
   },
   "variables": {
-    "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
-    "windowsOSVersion": "2012-R2-Datacenter",
+    "vmName": "[parameters('dnsLabelPrefix')]",
     "apiVersion": "2015-06-15",
     "nicName": "[concat(parameters('dnsLabelPrefix'),'Nic')]",
     "nsgName": "[concat(parameters('dnsLabelPrefix'),'Nsg')]",
@@ -83,7 +88,7 @@
   },
   "resources": [
     {
-      "apiVersion": "[variables('apiVersion')]",
+      "apiVersion": "2017-08-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('publicIPName')]",
       "location": "[resourceGroup().location]",
@@ -95,7 +100,7 @@
       }
     },
     {
-      "apiVersion": "[variables('apiVersion')]",
+      "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[resourceGroup().location]",
@@ -120,7 +125,7 @@
       }
     },
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('nsgName')]",
       "location": "[resourceGroup().location]",
@@ -146,7 +151,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('dnsLabelPrefix')]",
+      "name": "[variables('vmName')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
@@ -156,7 +161,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[parameters('dnsLabelPrefix')]",
+          "computerName": "[variables('vmName')]",
           "adminUsername": "[parameters('vmAdminUsername')]",
           "adminPassword": "[parameters('vmAdminPassword')]",
           "windowsConfiguration": {
@@ -170,7 +175,7 @@
           "osDisk": {
             "createOption": "FromImage",
             "managedDisk": {
-              "storageAccountType": "[parameters('storageAccountType')]"              
+              "storageAccountType": "[parameters('storageAccountType')]"
             }
           }
         },
@@ -180,6 +185,27 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
             }
           ]
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'),'/CustomScript')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[variables('vmName')]"
+      ],
+      "tags": {
+        "displayName": "CustomScript"
+      },
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.9",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "commandToExecute": "[parameters('postProvisioningScript')]"
         }
       }
     }
