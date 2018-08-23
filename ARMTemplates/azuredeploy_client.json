@@ -71,7 +71,7 @@
     },
     "postProvisioningScript": {
       "type": "securestring",
-      "defaultValue": "net localgroup 'Remote Desktop Users' /add 'Authenticated Users'",
+      "defaultValue": "net localgroup 'Remote Desktop Users' /add 'NT AUTHORITY\\Authenticated Users'",
       "metadata": {
         "description": "Script that runs after provisioning"
       }
