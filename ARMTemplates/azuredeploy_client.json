@@ -79,7 +79,6 @@
   },
   "variables": {
     "vmName": "[parameters('dnsLabelPrefix')]",
-    "apiVersion": "2015-06-15",
     "nicName": "[concat(parameters('dnsLabelPrefix'),'Nic')]",
     "nsgName": "[concat(parameters('dnsLabelPrefix'),'Nsg')]",
     "publicIPName": "[concat(parameters('dnsLabelPrefix'),'Pip')]",
