@@ -13,7 +13,7 @@ choco install git-credential-manager-for-windows -y
 
 
 # Install Tools
-choco install microsoft-edge
+choco install microsoft-edge -y
 choco install googlechrome -y
 choco install office365proplus -y
 choco install microsoft-teams -y
